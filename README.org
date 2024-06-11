@@ -12,8 +12,9 @@ The front-end website for Curator. Basically, the ~<video>~ tag inbetween user a
 
 ** Goals
 
-**** TODO Visitors will be able to see content (watch videos) hosted by external servers.
+**** DONE Visitors will be able to see content (watch videos) hosted by external servers.
 Started [2024-06-11 Tue 10:33]
+Finished [2024-06-11 Tue 13:18]
 
 AFAIK this is basically just going to be an HTML5 ~<video>~ tag with a customizable ~src~ URI.
 
