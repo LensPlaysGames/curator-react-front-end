@@ -13,14 +13,17 @@ The front-end website for Curator. Basically, the ~<video>~ tag inbetween user a
 ** Goals
 
 **** TODO Visitors will be able to see content (watch videos) hosted by external servers.
+Started [2024-06-11 Tue 10:33]
 
 AFAIK this is basically just going to be an HTML5 ~<video>~ tag with a customizable ~src~ URI.
 
 **** TODO Visitors will be able to see all Posts from a single Channel.
+Started [2024-06-11 Tue 10:33]
 
 AFAIK this is just going to display a list of Posts from a database.
 
 **** TODO Users will be able to discover content through Posts from Channels they Track.
+Started [2024-06-11 Tue 10:33]
 
 AFAIK this is going to require user authentication (Firebase?)
 
