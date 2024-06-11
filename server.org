@@ -10,12 +10,21 @@ https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/
 
 For security, it's the best idea to run a reverse proxy. You don't have to know what this means other than to search it and find a million guides.
 
-** Jellyfin (media server)
+** Jellyfin (server)
 
 https://jellyfin.org/
 https://jellyfin.org/docs/general/networking/
 
 Jellyfin is already made to stream media content, and is optimised for doing so. On top of that, it is completely free (as in freedom), so that is a beautiful thing.
+
+Jellyfin isn't /exactly/ what we need, and has a lot of extra bells and whistles for movies and tv that we don't need. If all that extra stuff scares you, use NextCloud or something similar.
+
+** Nextcloud (server)
+
+https://nextcloud.com/
+https://github.com/nextcloud/all-in-one/blob/main/reverse-proxy.md
+
+This software is also completely free (as in freedom), and is more to-the-point; it is basically a self-hosted cloud storage solution, and that's exactly what we need for Curator. You can use either this or Jellyfin or something similar as your server software.
 
 ** DuckDNS (free DNS entry, sort of)
 
