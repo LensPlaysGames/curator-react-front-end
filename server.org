@@ -1,0 +1,36 @@
+* Serving Content for Curator
+
+The best part about serving content for Curator is that it is equivalent to serving content at all! So, you can have your own website with all your own content, ads, sponsors, anything and everything you may want. At the same time, you may benefit from the centralised audience of Curator, as they will discover you and your content through posts.
+
+Please note, this is just one of one thousand million setups that would absolutely work.
+
+** nginx (reverse proxy)
+
+https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/
+
+For security, it's the best idea to run a reverse proxy. You don't have to know what this means other than to search it and find a million guides.
+
+** Jellyfin (media server)
+
+https://jellyfin.org/
+https://jellyfin.org/docs/general/networking/
+
+Jellyfin is already made to stream media content, and is optimised for doing so. On top of that, it is completely free (as in freedom), so that is a beautiful thing.
+
+** DuckDNS (free DNS entry, sort of)
+
+https://www.duckdns.org/
+
+You will need a DNS server to point a specific, unique URI to your server's external IP. Note, if you are on a home connection, your external IP is subject to change at your ISPs will; most ISPs allow you to request a static IP (possibly for specific devices), and that is ideal. One problem is that most DNS servers require payment in order to keep an entry in them. That sucks :(. Fear not, though, because DuckDNS offers completely free dynamic DNS. While it's not ideal, it is definitely better than having to manually update your external IP on every post on Curator every time it changes.
+
+** Let's Encrypt (ssl certificate)
+
+https://letsencrypt.org/
+
+Use ~certbot~ to generate an SSL certificate (requires fixed domain).
+
+** fail2ban
+
+https://github.com/fail2ban/fail2ban
+
+Not required, but a *very* good idea just for general security on a server open to the internet.
