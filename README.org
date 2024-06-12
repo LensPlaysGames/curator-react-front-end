@@ -18,8 +18,9 @@ Finished [2024-06-11 Tue 13:18]
 
 AFAIK this is basically just going to be an HTML5 ~<video>~ tag with a customizable ~src~ URI.
 
-**** TODO Visitors should be able to sign up and become an authenticated User
+**** DONE Visitors should be able to sign up and become an authenticated User
 Started [2024-06-11 Tue 13:29]
+Finished [2024-06-12 Wed 14:07]
 
 AFAIK this will require an authentication service and the one I have the most experience with is part of Firebase. Once we can have Users, that will bring us to the next goal, creating Posts.
 
@@ -37,6 +38,7 @@ Post:
 |-- title, String
 |-- info, String
 |-- date, Date
+|-- thumbnailURI, String
 `-- URI, String
 #+end_example
 
@@ -52,9 +54,9 @@ Posts (Table):
 |-- title, String
 |-- info, String
 |-- date, Date
+|-- thumbnailURI, String
 `-- URI, String
 #+end_example
-
 
 **** TODO Visitors will be able to see all Posts from a single Channel.
 Started [2024-06-11 Tue 10:33]

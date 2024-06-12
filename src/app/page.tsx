@@ -1,3 +1,9 @@
+"use client";
+
+import { SignInButton } from "./signInButton";
+import { signOut, UserContext } from "@/libs/firebase/auth"
+import { useContext } from "react";
+
 function VideoPlayer({url, title, info, date}: { url: string, title?: string, info?: string, date?: Date }) {
   if (!url) return "No URL passed to VideoPlayer...";
 
@@ -35,6 +41,8 @@ function VideoPlayer({url, title, info, date}: { url: string, title?: string, in
 }
 
 export default function Home() {
+  const {user, setUser} = useContext(UserContext);
+
   return (
     <main className="flex min-h-screen flex-col items-center p-4">
       {// Navbar
@@ -51,14 +59,19 @@ export default function Home() {
       {// Page Content
       }
       <div>
-        {// TODO: The idea would be to eventually have this data filled in from a database by this page.
+        { user
+          ? (
+            <>
+              <p>You are signed in!</p>
+              <p>uid: {user.uid}</p>
+              <button onClick={signOut}>Sign Out</button>
+            </>
+          )
+          : (<>
+               <SignInButton callback={setUser} />
+             </>
+          )
         }
-        <VideoPlayer
-          url="https://curator-official.duckdns.org/s/jYpnnLeAakA4CkL/download"
-          title="Video from Self-hosted Nextcloud Instance"
-          info="A test video to see if this site can fetch video from my self-hosted Nextcloud instance running on my laptop."
-          date={new Date()}
-        />
       </div>
     </main>
   );
