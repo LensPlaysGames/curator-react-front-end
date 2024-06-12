@@ -1,4 +1,4 @@
-function VideoPlayer({ url, title, info, date }) {
+function VideoPlayer({url, title, info, date}: { url: string, title?: string, info?: string, date?: Date }) {
   if (!url) return "No URL passed to VideoPlayer...";
 
   return (
