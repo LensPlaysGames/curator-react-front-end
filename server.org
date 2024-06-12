@@ -26,6 +26,8 @@ https://github.com/nextcloud/all-in-one/blob/main/reverse-proxy.md
 
 This software is also completely free (as in freedom), and is more to-the-point; it is basically a self-hosted cloud storage solution, and that's exactly what we need for Curator. You can use either this or Jellyfin or something similar as your server software.
 
+Alright, I have a very simple setup running on my laptop that I just used the all-in-one =docker run= command. It was quite literally just the one command to get it working locally, I couldn't recommend this more. Port forwarded 443 over TCP for HTTPS and used DuckDNS and I can now access my Nextcloud instance from anywhere.
+
 ** DuckDNS (free DNS entry, sort of)
 
 https://www.duckdns.org/
