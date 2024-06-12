@@ -54,7 +54,7 @@ export default function Home() {
         {// TODO: The idea would be to eventually have this data filled in from a database by this page.
         }
         <VideoPlayer
-          url="https://curator-official.duckdns.org/s/FRdkRgytMsiTF4C/download"
+          url="https://curator-official.duckdns.org/s/jYpnnLeAakA4CkL/download"
           title="Video from Self-hosted Nextcloud Instance"
           info="A test video to see if this site can fetch video from my self-hosted Nextcloud instance running on my laptop."
           date={new Date()}
