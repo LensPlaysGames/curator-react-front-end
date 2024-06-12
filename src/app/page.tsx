@@ -54,9 +54,9 @@ export default function Home() {
         {// TODO: The idea would be to eventually have this data filled in from a database by this page.
         }
         <VideoPlayer
-          url="https://github.com/ciaranbench/ciaranbench.github.io/raw/main/assets/dance_ex.mp4"
-          title="GitHub Dance Example"
-          info="A random dance video I found on GitHub and am using as an example of an externally hosted video streamed from this site."
+          url="https://curator-official.duckdns.org/s/FRdkRgytMsiTF4C/download"
+          title="Video from Self-hosted Nextcloud Instance"
+          info="A test video to see if this site can fetch video from my self-hosted Nextcloud instance running on my laptop."
           date={new Date()}
         />
       </div>
