@@ -61,11 +61,19 @@ export default function Home() {
       <div>
         { user
           ? (
-            <>
-              <p>You are signed in!</p>
-              <p>uid: {user.uid}</p>
-              <button onClick={signOut}>Sign Out</button>
-            </>
+            <div className="center">
+              { // TODO: The idea would be to eventually have this data filled in
+                // from a database, state, or something like that.
+              }
+              <VideoPlayer
+                url="https://curator-official.duckdns.org/s/jYpnnLeAakA4CkL/download"
+                title="Video from Self-hosted Nextcloud Instance"
+                info="A test video to see if this site can fetch video from my self-hosted Nextcloud instance running on my laptop."
+                date={new Date()}
+              />
+
+              <button className="text-red-600 pt-5 w-full" onClick={signOut}>Sign Out</button>
+            </div>
           )
           : (<>
                <SignInButton callback={setUser} />
