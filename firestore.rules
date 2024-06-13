@@ -6,10 +6,13 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // Allow a user to alter any document under their own user id in the
+    // Users subcollection.
     match /Users/{id}/{document=**} {
       allow read, write: if request.auth != null && request.auth.uid == id;
     }
 
+    // Allow anybody to read a user's posts.
     match /Users/{id}/Posts/{document=*} {
       allow read: if true;
     }
