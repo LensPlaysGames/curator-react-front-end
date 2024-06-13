@@ -10,6 +10,10 @@ service cloud.firestore {
       allow read, write: if request.auth != null && request.auth.uid == id;
     }
 
+    match /Users/{id}/Posts/{document=*} {
+      allow read: if true;
+    }
+
     match /WhoPosts/{postId}/{document=**} {
       // Anyone can figure out who posted a given post.
       allow read: if true;
