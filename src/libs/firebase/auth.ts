@@ -1,8 +1,7 @@
 import {
   type User,
   GoogleAuthProvider,
-  signInWithPopup,
-  onAuthStateChanged
+  signInWithPopup
 } from "firebase/auth";
 import { firebaseAuth } from "./config";
 import { UserContext } from "@/context/auth"
@@ -14,7 +13,6 @@ export {
 } from "firebase/auth";
 export { firebaseAuth } from "./config";
 export { UserContext } from "@/context/auth";
-
 
 export async function signOut() {
   await firebaseAuth.signOut();
