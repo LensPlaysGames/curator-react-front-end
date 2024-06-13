@@ -6,7 +6,7 @@ import {
   type User,
   UserContext,
 } from "@/libs/firebase/auth"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ClientWrapper({
   children,
@@ -15,10 +15,13 @@ export default function ClientWrapper({
 }>) {
   const [user, setUser] = useState<User | null>(null);
 
-  onAuthStateChanged(firebaseAuth, (newUser) => {
-    setUser(newUser);
-    return newUser;
-  });
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (newUser) => {
+      setUser(newUser);
+      return newUser;
+    });
+    return unsubscribe;
+  }, []);
 
   return (
     <UserContext.Provider value={{user, setUser}}>
