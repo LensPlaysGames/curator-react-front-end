@@ -1,8 +1,9 @@
 // This is the big daddy file that sets up the Firebase application and
 // exposes all the necessary components, like firebaseAuth.
 
+import { getApps, initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { initializeApp, getApps } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBKLll6CklsBfv193UsU2ZI2nmp7gi1Nl4",
@@ -18,4 +19,4 @@ const firebaseConfig = {
 const firebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
 export const firebaseAuth = getAuth();
-
+export const firebaseDb = getFirestore();

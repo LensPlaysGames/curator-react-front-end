@@ -18,9 +18,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ClientWrapper>
-          {children}
-        </ClientWrapper>
+        <main className="flex min-h-screen flex-col items-center p-4">
+          <ClientWrapper>
+            {// Navbar
+            }
+            <div className="flex justify-between align-center w-full mb-2">
+              <div id="navbar-left">
+                <h1>Curator</h1>
+              </div>
+              <div id="navbar-right">
+                <h1>Welcome</h1>
+              </div>
+            </div>
+
+            {children}
+          </ClientWrapper>
+        </main>
       </body>
     </html>
   );
