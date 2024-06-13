@@ -1,0 +1,114 @@
+#+title: Creator Selfhost Quickstart
+
+* Understanding Curator
+
+Let's start off by saying Curator isn't just a website, it's the entire infrastructure and architecture (including many websites).
+
+Curator is designed as a decentralized video sharing platform, more or less. I won't go into the whole spiel, but this means someone who wants their videos available has the *responsibility* of /making/ them available. If you are here, that someone is /you/, and you are in the right place.
+
+Lets start with some basic requirements to *host your own* videos.
+
+** Requirements
+
+- Internet Connection
+
+  One that you have total control over. Kids, you will need to port forward, and nowadays that means getting into the xFinity app on your parent's phone. More on port forwarding later.
+
+- A Computer
+
+One that will stay on for as long as you want people to be able to access your videos. That usually means all day, every day.
+
+That's really all you need to get started, so, let's get started.
+
+** One Way to Skin a Carbuncle
+
+Or whatever the saying is. The point being this is just the way I made it work, and there are /plenty/.
+
+No matter what platform, you will need to port forward.
+
+*** Port Forward Port 443 (HTTPS)
+
+Just the one is needed, as far as I know, as we end up with a reverse proxy setup (thanks to Nextcloud AIO).
+
+*** DuckDNS
+
+https://www.duckdns.org/
+
+The amazing folks over at DuckDNS offer a free dynamic DNS service. What that means is a free domain! So, be grateful you don't have to rent or buy it from a registrar.
+
+Go to the above link and sign in with the authentication method of your choice.
+
+Then, enter a domain name of your choice and click the green "Add Domain" button.
+
+After the entry appears below, click the "Update IP" button. That's it, you now have a domain routed to your external IP.
+
+**** Determine if your IP is Static or Dynamic
+
+Go to https://whatismyipaddress.com/ then click the kind of hard-to-see link titled "Show Complete IP Details" just below the giant red button in the center. This will say if you (are likely to) have a static or dynamic IP.
+
+If static, you don't have to do anything, and can move on to the platform specific setup.
+
+If dynamic, you will need to setup a recurring service to update your IP in DuckDNS' database with a simple POST request. There is very good documentation on this on the DuckDNS website for all sorts of different OSes and setups; just go to the "install" tab using the navbar at the top, then select your OS/setup (probably =windows-gui=, knowing /you/), the domain you just created in the dropdown at the bottom, and follow the instructions.
+
+*** Windows
+
+**** Docker Desktop
+
+https://www.docker.com/products/docker-desktop/
+
+Go to the above link and click the giant download button. You are a Windows user, so this should be relatively normal. NOTE: You will *have to* restart your PC as part of the installation. So, prepare for that.
+
+Once installed, open Docker Desktop and get the engine running.
+
+Docker is released under the Apache 2.0 license, so, we like Docker :).
+
+**** Nextcloud
+
+https://nextcloud.com/
+https://github.com/nextcloud/all-in-one?tab=readme-ov-file#how-to-run-aio-on-windows
+
+This one is where you have to open the *spooky*, /*scary*/ command line, and enter /gasp/ *one command*. Yeah, that's actually it.
+
+#+begin_src shell
+  docker run ^
+    --init ^
+    --sig-proxy=false ^
+    --name nextcloud-aio-mastercontainer ^
+    --restart always ^
+    --publish 80:80 ^
+    --publish 8080:8080 ^
+    --publish 8443:8443 ^
+    --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config ^
+    --volume //var/run/docker.sock:/var/run/docker.sock:ro ^
+    --env NEXTCLOUD_DATADIR="/run/desktop/mnt/host/c/Users/YOUR_USERNAME_HERE_PLEASE_FOR_THE_LOVE_OF_GOD/NextcloudShare" ^
+    nextcloud/all-in-one:latest
+#+end_src
+
+The above command will literally do /everything/ for you. HOWEVER! You have hopefully realized that it currently hosts from =C:\Users\YOUR_USERNAME_HERE_PLEASE_FOR_THE_LOVE_OF_GOD\NextcloudShare=. I'm sure you know how you need to alter the above command to make the path resolve correctly to a subdirectory of /your/ home directory (hint: it involves /your/ Windows username). If you are still confused, open File Explorer, go to the C drive, then the Users folder, and find out which of those folders is yours.
+
+After you run the above command and wait a little for it to stop doing things, go to ~localhost:8080~ (in a browser) for the admin AIO portal to setup the inital instance. Ideally, you should write down the login phrase on paper, but you could also just take a picture with your phone.
+
+IIRC it asks for your domain name. Enter your full domain name from DuckDNS, something like =your-domain-name.duckdns.org=. This should get you to the setup screen.
+
+On the setup screen, just down below, *and before starting the containers for the first time*, uncheck everything except Imaginary, unless you want those extra features for some personal reason. This will drastically speed up the next step.
+
+Click ~Start Containers~ or something similar at the top. It will take anywhere from several seconds to a couple minutes to download all the containers. If you want to see something happening, take a look at the containers popping in in Docker Desktop.
+
+Eventually, it will be ready, and there should be a button to go to the nextcloud instance in the AIO portal. Click that and make sure you can access your nextcloud instance from the domain. Congrats! You are hosting your own server.
+
+You can also try disconnecting from your WiFi on your phone (exiting the LAN) and going to the domain. You should see the login page of Nextcloud. If you want, back on the server, logged in as admin, you can click the top right and then "Users" and add a user for yourself to login from wherever you are; make sure to include it in the admin group. It's like DropBox or Google Drive in that each user has their own set of files and everything, but it's possible to easily share them between users.
+
+If you enabled Collabora, you can even work real-time on documents and spreadsheets like in Google Docs, Google Sheets, etc. If you haven't already for some insane reason, research Nextcloud and what else it can do: it's pretty cool.
+
+Now, if you didn't earlier, you should probably create an admin group user with a username and password you can actually remember, whatever that means for you. This way, you can upload files from anywhere. Then, logout from the starter admin account and login with /your/ admin account. Now, you are ready :).
+
+You can delete all the placeholder files. Upload your content here. Get a share link. For videos, use the download link. This is your content URI for your post on Curator. For the thumbnail, you could upload a separate image or replace ~/download~ with ~/preview~ in the download link.
+
+Nextcloud is released under AGPL-3.0, so, we like Nextcloud :).
+
+*** Linux
+
+I haven't tried yet. Sorry. I bet it's very easy tho.
+
+1. Install Docker
+2. Run the docker command with sudo, but change the data directory to somewhere reasonable
