@@ -6,10 +6,11 @@ export async function GET(request: Request, { params }: { params: { userId: stri
   const postsData = await getDocs(query(
     postsRef,
     orderBy("date", "desc"),
-    limit(10)
+    limit(100)
   ));
   const posts = postsData.docs.map(doc => ({
     id: doc.id,
+    posterUserId: params.userId,
     ...doc.data(),
     date: doc.data().date.toDate() // convert Firebase Timestamp to JavaScript Date
   }))
