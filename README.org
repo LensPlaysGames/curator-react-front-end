@@ -14,8 +14,13 @@ The front-end website for Curator. Basically, the ~<video>~ tag inbetween user a
 
 ** Developers
 
-To start the development server on =localhost:3000=:
+To start the development server on =localhost:3000=
 #+begin_src shell
   npm run dev
 #+end_src
 
+Alternatively, you can run your own http server and that serves the =out= subdirectory (like python http.server or a simple perl setup). Or see https://gist.github.com/willurd/5720255#file-web-servers-md.
+
+** Goals
+
+See [[file:TODO.org]].
