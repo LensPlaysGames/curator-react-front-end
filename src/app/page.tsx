@@ -260,7 +260,7 @@ export default function Home() {
                           &#x1F5D1;
                         </button>
 
-                        <a target="_blank" href={`${HOSTNAME}/see?u=${user.uid}&p=${post.id}`}>
+                        <a target="_blank" href={`${HOSTNAME}/see/${post.id}/?u=${user.uid}`}>
                           <button className="py-1 px-3">&#9658;</button>
                         </a>
                       </div>

@@ -1,16 +1,11 @@
 "use client";
 
-// NOTE: This page isn't being updated anymore and will go away in a few
-// weeks; it has been succeeded by the dynamic routing method for the
-// postId and only using search params for the optional user ID to lessen
-// load on database reads. But, we could also just make that an API route
-// and cache those indefinitely since WhoPosts can never change.
-
 import { useSearchParams } from "next/navigation";
-import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState, Suspense } from "react";
-import { firebaseDb } from "@/libs/firebase/config"
+import { HOSTNAME } from "@/constants"
+import { firebaseDb, doc, getDoc } from "@/libs/firebase/db"
 import VideoPlayer from "@/components/videoPlayer";
+import { whoPosted } from "@/libs/api";
 
 async function FetchPost(postId: string | null, posterUserId?: string | null) {
   if (!postId || postId.length === 0) {
@@ -21,14 +16,13 @@ async function FetchPost(postId: string | null, posterUserId?: string | null) {
 
   // If a user id was not provided, fetch it from the WhoPosts collection.
   if (!posterUserId) {
-    const snapshot = await getDoc(doc(firebaseDb, "WhoPosts", postId));
-    if (!snapshot.exists()) {
-      console.error(`Could not determine who posted ${postId}`);
-      return { error: (
-        <p>Internal error: could not determine who posted post {postId}. Please try again later after notifying an admin.</p>
-      )};
+    const data = await whoPosted(postId);
+    if (data.error) return {
+      error: (
+        <p>{data.error}</p>
+      )
     }
-    posterUserId = snapshot.data()?.uid;
+    posterUserId = data.uid;
   }
 
   // Fetch post data
@@ -42,11 +36,13 @@ async function FetchPost(postId: string | null, posterUserId?: string | null) {
   const post = postSnapshot.data();
   // Convert Firebase Timestamp to JavaScript Date.
   post.date = post.date.toDate();
+  // Record posterUserId for convenience (i.e. front-end links).
+  post.posterUserId = posterUserId;
 
   return post;
 }
 
-function PostDisplay() {
+function PostDisplay({ postId }: { postId: string }) {
   const [post, setPost] = useState<any>(null);
   const params = useSearchParams();
 
@@ -59,7 +55,7 @@ function PostDisplay() {
   useEffect(() => {
     // Async IIFE
     (async () => {
-      setPost(await FetchPost(params.get("p"), params.get("u")));
+      setPost(await FetchPost(postId, params.get("u")));
     })();
   }, []);
 
@@ -73,21 +69,24 @@ function PostDisplay() {
 
   // Success! Post acquired, we may now display it.
   return (
-    <VideoPlayer
-      url={post.contentURI}
-      title={post.title}
-      info={post.info}
-      date={post.date}
-    />
+    <>
+      <VideoPlayer
+        url={post.contentURI}
+        title={post.title}
+        info={post.info}
+        date={post.date}
+      />
+      <a href={`${HOSTNAME}/u/${post.posterUserId}`}><button>Channel</button></a>
+    </>
   )
 }
 
-export default function See() {
+export default function See({ params }: { params: { postId: string }}) {
   // I wouldn't touch Suspense with a ten foot pole, but, for some ungodly
   // reason, it is *required* when using `useSearchParams`...
   return (
     <Suspense>
-      <PostDisplay />
+      <PostDisplay postId={params.postId} />
     </Suspense>
   );
 }
