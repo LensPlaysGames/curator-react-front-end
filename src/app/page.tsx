@@ -74,6 +74,25 @@ export default function Home() {
     return Promise.all(promises);
   }
 
+  async function deletePost(post) {
+    if (!confirm(`Really delete post titled "${post.title}?"`)) return;
+
+    setPosts(oldPosts => {
+      // Remove deleted post
+      const newPosts = oldPosts.filter(candidate => candidate.id !== post.id);
+      return newPosts;
+    });
+
+    let promises = [];
+    promises.push(
+      deleteDoc(doc(firebaseDb, "Users", `${user.uid}`, "Posts", post.id))
+    );
+    promises.push(
+      deleteDoc(doc(firebaseDb, "WhoPosts", post.id))
+    );
+    await Promise.all(promises);
+  }
+
   // Run once (fetch data)
   useEffect(() => {
     // Async IIFE
@@ -175,7 +194,7 @@ export default function Home() {
               <button
                 className="mt-1"
                 onClick={
-                  e => postPost(
+                  () => postPost(
                     user.uid,
                     inputPostTitle,
                     inputPostInfo,
@@ -205,24 +224,7 @@ export default function Home() {
                       <div className="flex ml-2">
                         <button
                           className="py-1 px-3"
-                          onClick={async () => {
-                            if (!confirm(`Really delete post titled "${post.title}?"`)) return;
-
-                            setPosts(oldPosts => {
-                              // Remove deleted post
-                              const newPosts = oldPosts.filter(candidate => candidate.id !== post.id);
-                              return newPosts;
-                            });
-
-                            let promises = [];
-                            promises.push(
-                              deleteDoc(doc(firebaseDb, "Users", `${user.uid}`, "Posts", post.id))
-                            );
-                            promises.push(
-                              deleteDoc(doc(firebaseDb, "WhoPosts", post.id))
-                            );
-                            await Promise.all(promises);
-                          }}
+                          onClick={() => deletePost(post)}
                         >
                           &#x1F5D1;
                         </button>
