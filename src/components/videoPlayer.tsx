@@ -11,7 +11,7 @@ export default function VideoPlayer({ url, title, info, date }: { url: string, t
         Your browser does not support this video, sorry
       </video>
 
-      <div className="flex justify-between">
+      <div className="flex flex-col md:flex-row justify-between">
 
         { title
           ? <h2>{title}</h2>

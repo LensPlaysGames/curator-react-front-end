@@ -37,7 +37,7 @@ button {
 }
 
 .panel {
-    @apply flex flex-col gap-y-1 py-3 px-5 mt-4 border border-zinc-700 bg-zinc-900 rounded;
+    @apply flex flex-col gap-y-1 py-3 px-5 mt-4 border border-zinc-700 bg-zinc-900 rounded w-full;
 }
 
 @layer utilities {

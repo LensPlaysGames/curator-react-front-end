@@ -145,6 +145,18 @@ function CreatePostForm({ user, setPosts }: { user: any, setPosts: any }) {
         />
       </div>
 
+      {/*
+        <div className="flex justify-between">
+          <label className="text-nowrap" htmlFor="post_type">Type</label>
+          <select id="post_type">
+            <option value="V" selected>Video</option>
+            <option value="A">Audio</option>
+            <option value="T">Text</option>
+            <option value="S">Something Else</option>
+          </select>
+        </div>
+        */}
+
       <button
         className="my-2"
         onClick={
@@ -214,10 +226,10 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full max-w-screen-sm">
       { user
         ? (
-          <div>
+          <>
             <AccountSettings user={user} />
 
             <CreatePostForm user={user} setPosts={setPosts} />
@@ -229,12 +241,12 @@ export default function Home() {
                 {
                   posts.map(post => (
                     <div
-                      className="flex bg-black justify-between items-center p-2 border border-zinc-700 rounded"
+                      className="flex justify-between bg-black items-center p-2 border border-zinc-700 rounded"
                       key={post.id}
                     >
                       <div className="flex justify-between gap-x-6 w-full overflow-hidden">
                         <span className="truncate">{post.title}</span>
-                        <span className="overflow-clip">{post.date.toDateString()}</span>
+                        <span className="hidden md:inline">{post.date.toDateString()}</span>
                       </div>
                       <div className="flex ml-2">
                         <button
@@ -255,7 +267,7 @@ export default function Home() {
             </div>
 
             <button className="bg-zinc-700 hover:bg-zinc-900 text-red-600 hover:text-red-600 my-4 w-full" onClick={signOut}>Sign Out</button>
-          </div>
+          </>
         )
         : (<>
              <SignInButton callback={setUser} />
