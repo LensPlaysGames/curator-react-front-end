@@ -25,14 +25,42 @@ import {
   HOSTNAME
 } from "@/constants";
 
-export default function Home() {
-  const {user, setUser} = useContext(UserContext);
+function AccountSettings({ user }: { user: any }) {
   const [inputDisplayName, setInputDisplayName] = useState<string>("");
+
+  return (
+    <>
+      <h1>Account Settings</h1>
+      <div>
+        <label htmlFor="display_name">Display Name</label>
+        <div className="flex justify-between">
+          <input
+            type="text"
+            id="display_name"
+            value={inputDisplayName}
+            onChange={ e => setInputDisplayName(e.target.value) }
+          />
+          <button
+            className="ml-2"
+            onClick={async () => {
+              await setDoc(doc(firebaseDb, "Users", `${user.uid}`), {
+                displayName: inputDisplayName
+              }, { merge: true })
+            }}
+          >
+            Set
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
+
+function CreatePostForm({ user, setPostsCallback }: { user: any, setPostsCallback: Function }) {
   const [inputPostTitle, setInputPostTitle] = useState<string>("");
   const [inputPostInfo, setInputPostInfo] = useState<string>("");
   const [inputPostContentURI, setInputPostContentURI] = useState<string>("");
   const [inputPostThumbnailURI, setInputPostThumbnailURI] = useState<string>("");
-  const [posts, setPosts] = useState<Array<any>>([]);
 
   async function postPost(posterUserId: string, title: string, info: string, contentURI: string, thumbnailURI: string) {
     // Generate a universally unique post ID; we don't check for collisions
@@ -49,10 +77,9 @@ export default function Home() {
       type: "video",
     };
 
-    setPosts(oldPosts => {
-      const newPosts = oldPosts.concat({ id: postId, ...post });
-      // Sort by date, most recent first (descending)
-      newPosts.sort((a, b) => (b.date - a.date));
+    setPostsCallback(oldPosts => {
+      // We do this weird syntax to avoid having to sort.
+      const newPosts = [{ id: postId, ...post }].concat(oldPosts);
       return newPosts;
     })
 
@@ -73,6 +100,72 @@ export default function Home() {
 
     return Promise.all(promises);
   }
+
+  return (
+    <div className="flex flex-col gap-y-1 mt-4">
+      <h1>Create New Post</h1>
+
+      <div>
+        <label className="text-nowrap" htmlFor="post_title">Title</label>
+        <input
+          type="text"
+          id="post_title"
+          value={inputPostTitle}
+          onChange={ e => setInputPostTitle(e.target.value) }
+        />
+      </div>
+
+      <div>
+        <label className="text-nowrap" htmlFor="post_info">Info</label>
+        <input
+          type="text"
+          id="post_info"
+          value={inputPostInfo}
+          onChange={ e => setInputPostInfo(e.target.value) }
+        />
+      </div>
+
+      <div>
+        <label className="text-nowrap" htmlFor="post_content_uri">Content URI</label>
+        <input
+          type="URL"
+          id="post_content_uri"
+          value={inputPostContentURI}
+          onChange={ e => setInputPostContentURI(e.target.value) }
+        />
+      </div>
+
+      <div>
+        <label className="text-nowrap" htmlFor="post_thumbnail_uri">Thumbnail URI</label>
+        <input
+          type="URL"
+          id="post_thumbnail_uri"
+          value={inputPostThumbnailURI}
+          onChange={ e => setInputPostThumbnailURI(e.target.value) }
+        />
+      </div>
+
+      <button
+        className="mt-1"
+        onClick={
+          () => postPost(
+            user.uid,
+            inputPostTitle,
+            inputPostInfo,
+            inputPostContentURI,
+            inputPostThumbnailURI
+          )
+        }
+      >
+        Post
+      </button>
+    </div>
+  );
+}
+
+export default function Home() {
+  const {user, setUser} = useContext(UserContext);
+  const [posts, setPosts] = useState<Array<any>>([]);
 
   async function deletePost(post: any) {
     if (!confirm(`Really delete post titled "${post.title}?"`)) return;
@@ -102,7 +195,7 @@ export default function Home() {
           const postsRef = collection(firebaseDb, "Users", `${newUser.uid}`, "Posts");
           const postsData = await getDocs(query(
             postsRef,
-            orderBy("date"),
+            orderBy("date", "desc"),
             limit(10)
           ));
           const posts = postsData.docs.map(doc => ({
@@ -111,7 +204,7 @@ export default function Home() {
             date: doc.data().date.toDate() // convert Firebase Timestamp to JavaScript Date
           }))
 
-          // Sort by date, most recent first (descending)
+          // Confidence check: sort by date, most recent first (descending)
           posts.sort((a, b) => (b.date - a.date));
 
           setPosts(posts);
@@ -125,87 +218,9 @@ export default function Home() {
       { user
         ? (
           <div>
-            <h1>Account Settings</h1>
-            <div>
-              <label htmlFor="display_name">Display Name</label>
-              <div className="flex justify-between">
-                <input
-                  type="text"
-                  id="display_name"
-                  value={inputDisplayName}
-                  onChange={ e => setInputDisplayName(e.target.value) }
-                />
-                <button
-                  className="ml-2"
-                  onClick={async () => {
-                    await setDoc(doc(firebaseDb, "Users", `${user.uid}`), {
-                      displayName: inputDisplayName
-                    }, { merge: true })
-                  }}
-                >
-                  Set
-                </button>
-              </div>
-            </div>
+            <AccountSettings user={user} />
 
-            <div className="flex flex-col gap-y-1 mt-4">
-              <h1>Create New Post</h1>
-
-              <div>
-                <label className="text-nowrap" htmlFor="post_title">Title</label>
-                <input
-                  type="text"
-                  id="post_title"
-                  value={inputPostTitle}
-                  onChange={ e => setInputPostTitle(e.target.value) }
-                />
-              </div>
-
-              <div>
-                <label className="text-nowrap" htmlFor="post_info">Info</label>
-                <input
-                  type="text"
-                  id="post_info"
-                  value={inputPostInfo}
-                  onChange={ e => setInputPostInfo(e.target.value) }
-                />
-              </div>
-
-              <div>
-                <label className="text-nowrap" htmlFor="post_content_uri">Content URI</label>
-                <input
-                  type="URL"
-                  id="post_content_uri"
-                  value={inputPostContentURI}
-                  onChange={ e => setInputPostContentURI(e.target.value) }
-                />
-              </div>
-
-              <div>
-                <label className="text-nowrap" htmlFor="post_thumbnail_uri">Thumbnail URI</label>
-                <input
-                  type="URL"
-                  id="post_thumbnail_uri"
-                  value={inputPostThumbnailURI}
-                  onChange={ e => setInputPostThumbnailURI(e.target.value) }
-                />
-              </div>
-
-              <button
-                className="mt-1"
-                onClick={
-                  () => postPost(
-                    user.uid,
-                    inputPostTitle,
-                    inputPostInfo,
-                    inputPostContentURI,
-                    inputPostThumbnailURI
-                  )
-                }
-              >
-                Post
-              </button>
-            </div>
+            <CreatePostForm user={user} setPostsCallback={setPosts} />
 
             <div>
               <h1>Your Posts</h1>
