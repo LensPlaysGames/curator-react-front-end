@@ -14,6 +14,7 @@ import {
   query,
   setDoc
 } from "firebase/firestore";
+import { revalidateTag } from "next/cache"
 import { firebaseDb } from "@/libs/firebase/config";
 import {
   firebaseAuth,
@@ -21,9 +22,8 @@ import {
   signOut,
   UserContext
 } from "@/libs/firebase/auth";
-import {
-  HOSTNAME
-} from "@/constants";
+import { ownPosts } from "@/libs/api";
+import { HOSTNAME } from "@/constants";
 
 function AccountSettings({ user }: { user: any }) {
   const [inputDisplayName, setInputDisplayName] = useState<string>("");
@@ -86,6 +86,10 @@ function CreatePostForm({ user, setPosts }: { user: any, setPosts: any }) {
       const newPosts = [{ id: postId, ...post }].concat(oldPosts);
       return newPosts;
     })
+
+    // Re-fetch our own posts from database next time, instead of from the
+    // cache, since we're about to alter them.
+    revalidateTag("ownPosts");
 
     const promises = [];
 
@@ -192,6 +196,10 @@ export default function Home() {
       return newPosts;
     });
 
+    // Re-fetch our own posts from database next time, instead of from the
+    // cache, since we're about to alter them.
+    revalidateTag("ownPosts");
+
     let promises = [];
     promises.push(
       deleteDoc(doc(firebaseDb, "Users", `${user?.uid}`, "Posts", post.id))
@@ -208,22 +216,8 @@ export default function Home() {
     (async () => {
       onAuthStateChanged(firebaseAuth, async (newUser) => {
         if (newUser) {
-          const postsRef = collection(firebaseDb, "Users", `${newUser.uid}`, "Posts");
-          const postsData = await getDocs(query(
-            postsRef,
-            orderBy("date", "desc"),
-            limit(10)
-          ));
-          const posts = postsData.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-            date: doc.data().date.toDate() // convert Firebase Timestamp to JavaScript Date
-          }))
-
-          // Confidence check: sort by date, most recent first (descending)
-          posts.sort((a, b) => (b.date - a.date));
-
-          setPosts(posts);
+          const data = await ownPosts(newUser.uid);
+          setPosts(data.posts);
         }
       })
     })();

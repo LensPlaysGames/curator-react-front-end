@@ -2,35 +2,17 @@
 
 import { HOSTNAME } from "@/constants";
 import { useEffect, useState } from "react";
+import { posts as fetchPosts } from "@/libs/api"
 
 export default function UserPage({ params }: { params: { userId: string }}) {
   const [posts, setPosts] = useState<Array<any>>([]);
   const uid = params.userId;
 
-  async function fetchPosts() {
-    const response = await fetch(`${HOSTNAME}/api/postsBy/${uid}`, {
-      next: {
-        // time-to-live for this cache entry, in seconds
-        revalidate: 60 * 5,
-      }
-    })
-
-    if (response.ok) {
-      const data = await response.json();
-      const posts = data.posts.map((post: any) => ({
-        ...post,
-        date: new Date(post.date),
-      }))
-      setPosts(posts);
-    } else console.error(
-      `FETCH: status=${response.status}, statusText=${response.statusText}, url=${response.url}`
-    )
-  }
-
   // Run effect just once (empty dependency array).
   useEffect(() => {
     (async () => {
-      await fetchPosts();
+      const data = await fetchPosts(uid);
+      setPosts(data.posts);
     })()
   }, []);
 
