@@ -74,7 +74,7 @@ export default function Home() {
     return Promise.all(promises);
   }
 
-  async function deletePost(post) {
+  async function deletePost(post: any) {
     if (!confirm(`Really delete post titled "${post.title}?"`)) return;
 
     setPosts(oldPosts => {
@@ -85,7 +85,7 @@ export default function Home() {
 
     let promises = [];
     promises.push(
-      deleteDoc(doc(firebaseDb, "Users", `${user.uid}`, "Posts", post.id))
+      deleteDoc(doc(firebaseDb, "Users", `${user?.uid}`, "Posts", post.id))
     );
     promises.push(
       deleteDoc(doc(firebaseDb, "WhoPosts", post.id))
@@ -229,7 +229,7 @@ export default function Home() {
                           &#x1F5D1;
                         </button>
 
-                        <a target="_blank" href={`${HOSTNAME}/see?p=${post.id}`}>
+                        <a target="_blank" href={`${HOSTNAME}/see?u=${user.uid}&p=${post.id}`}>
                           <button className="py-1 px-3">&#9658;</button>
                         </a>
                       </div>
