@@ -2,11 +2,11 @@
 
 * Understanding Curator
 
-Let's start off by saying Curator isn't just a website, it's the entire infrastructure and architecture (including many websites).
+Let's start off by saying Curator isn't just a website, it's the entire infrastructure and architecture (including many websites, one of which /you/ will host).
 
 Curator is designed as a decentralized video sharing platform, more or less. I won't go into the whole spiel, but this means someone who wants their videos available has the *responsibility* of /making/ them available. If you are here, that someone is /you/, and you are in the right place.
 
-Lets start with some basic requirements to *host your own* videos.
+Lets start with some basic requirements to *host your own videos*.
 
 ** Requirements
 
@@ -16,7 +16,7 @@ Lets start with some basic requirements to *host your own* videos.
 
 - A Computer
 
-One that will stay on for as long as you want people to be able to access your videos. That usually means all day, every day.
+  One that will stay on for as long as you want people to be able to access your videos. That usually means all day, every day.
 
 That's really all you need to get started, so, let's get started.
 
@@ -28,7 +28,7 @@ No matter what platform, you will need to port forward.
 
 *** Port Forward Port 443 (HTTPS)
 
-Just the one is needed, as far as I know, as we end up with a reverse proxy setup (thanks to Nextcloud AIO).
+Just the one is needed, as we end up with a reverse proxy setup thanks to Nextcloud AIO.
 
 *** DuckDNS
 
@@ -56,7 +56,7 @@ If dynamic, you will need to setup a recurring service to update your IP in Duck
 
 https://www.docker.com/products/docker-desktop/
 
-Go to the above link and click the giant download button. You are a Windows user, so this should be relatively normal. NOTE: You will *have to* restart your PC as part of the installation. So, prepare for that.
+Go to the above link and click the giant download button. You are a Windows user, so this should be relatively normal. NOTE: You will *have to restart your PC as part of the installation*, so, prepare for that.
 
 Once installed, open Docker Desktop and get the engine running.
 
@@ -65,6 +65,7 @@ Docker is released under the Apache 2.0 license, so, we like Docker :).
 **** Nextcloud
 
 https://nextcloud.com/
+
 https://github.com/nextcloud/all-in-one?tab=readme-ov-file#how-to-run-aio-on-windows
 
 This one is where you have to open the *spooky*, /*scary*/ command line, and enter /gasp/ *one command*. Yeah, that's actually it.
@@ -84,7 +85,7 @@ This one is where you have to open the *spooky*, /*scary*/ command line, and ent
     nextcloud/all-in-one:latest
 #+end_src
 
-The above command will literally do /everything/ for you. HOWEVER! You have hopefully realized that it currently hosts from =C:\Users\YOUR_USERNAME_HERE_PLEASE_FOR_THE_LOVE_OF_GOD\NextcloudShare=. I'm sure you know how you need to alter the above command to make the path resolve correctly to a subdirectory of /your/ home directory (hint: it involves /your/ Windows username). If you are still confused, open File Explorer, go to the C drive, then the Users folder, and find out which of those folders is yours.
+The above command will literally do /everything/ for you. HOWEVER! You have hopefully realized that it currently hosts from =C:\Users\YOUR_USERNAME_HERE_PLEASE_FOR_THE_LOVE_OF_GOD\NextcloudShare=. I'm sure you know how you need to alter the above command to make the path resolve correctly to a subdirectory of /your/ home directory (hint: it involves /your/ Windows username). If you are still confused, open File Explorer, go to the C drive, then the Users folder, and find out which of those folders is yours. The name of that folder is what you need to replace the long, capital path segment with.
 
 After you run the above command and wait a little for it to stop doing things, go to ~localhost:8080~ (in a browser) for the admin AIO portal to setup the inital instance. Ideally, you should write down the login phrase on paper, but you could also just take a picture with your phone.
 
