@@ -8,6 +8,8 @@ The front-end website for Curator. Basically, the ~<video>~ tag inbetween user a
 
 - Channel :: A user on the site that has created Posts.
 
+- Tracker :: A user that tracks posts from a given channel.
+
 - Post :: A description of content and where to find it. Title, info section, URI, things like that.
 
 ** Goals
@@ -24,8 +26,9 @@ Finished [2024-06-12 Wed 14:07]
 
 AFAIK this will require an authentication service and the one I have the most experience with is part of Firebase. Once we can have Users, that will bring us to the next goal, creating Posts.
 
-**** TODO Users should be able to create Posts
+**** DONE Users should be able to create Posts
 Started [2024-06-11 Tue 13:31]
+Finished [2024-06-12 Wed 18:40]
 
 This is where we get into the weeds a bit. I would /sometimes/ prefer that a single User only host content from a single source (i.e. domain). This would mean that everything on the channel is known to come from somewhere specific. But I would also understand if some people wanted to use it as like a literal curation board to save videos they like. So, I think that eventually this will form either two different types of User, two different types of Post, or something to that effect. For now, we will focus on the main use case I see, which is creators hosting their own content, or groups of creators hosting content.
 
@@ -62,6 +65,8 @@ Posts (Table):
 Started [2024-06-11 Tue 10:33]
 
 AFAIK this is just going to display a list of Posts from a database.
+
+I think I'm going to experiment with slug routing or whatever it's called when I use the brackets in filenames in =Next.js=. So like ~/u/[channelId]~ or something like that.
 
 **** TODO Users will be able to discover content through Posts from Channels they Track.
 Started [2024-06-11 Tue 10:33]
