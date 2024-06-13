@@ -29,7 +29,7 @@ function AccountSettings({ user }: { user: any }) {
   const [inputDisplayName, setInputDisplayName] = useState<string>("");
 
   return (
-    <>
+    <div className="panel">
       <h1>Account Settings</h1>
       <div>
         <label htmlFor="display_name">Display Name</label>
@@ -52,7 +52,7 @@ function AccountSettings({ user }: { user: any }) {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -102,7 +102,7 @@ function CreatePostForm({ user, setPosts }: { user: any, setPosts: any }) {
   }
 
   return (
-    <div className="flex flex-col gap-y-1 py-3 px-5 mt-4 border border-zinc-700 bg-zinc-900 rounded">
+    <div className="panel">
       <h1>Create New Post</h1>
 
       <div>
@@ -222,14 +222,14 @@ export default function Home() {
 
             <CreatePostForm user={user} setPosts={setPosts} />
 
-            <div>
+            <div className="panel">
               <h1>Your Posts</h1>
 
               <div className="flex flex-col mt-2">
                 {
                   posts.map(post => (
                     <div
-                      className="flex justify-between items-center p-2 border border-zinc-700 rounded"
+                      className="flex bg-black justify-between items-center p-2 border border-zinc-700 rounded"
                       key={post.id}
                     >
                       <div className="flex justify-between gap-x-6 w-full overflow-hidden">
