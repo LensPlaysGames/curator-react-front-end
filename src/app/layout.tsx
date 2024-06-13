@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import ClientWrapper from "./clientWrapper";
+import { HOSTNAME } from "@/constants";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +25,9 @@ export default function RootLayout({
             }
             <div className="flex justify-between align-center w-full mb-2">
               <div id="navbar-left">
-                <h1>Curator</h1>
+                <a href={`${HOSTNAME}`}>
+                  <h1>Curator</h1>
+                </a>
               </div>
               <div id="navbar-right">
                 <h1>Welcome</h1>
