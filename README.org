@@ -19,7 +19,11 @@ To start the development server on =localhost:3000=
   npm run dev
 #+end_src
 
-Alternatively, you can run your own http server and that serves the =out= subdirectory (like python http.server or a simple perl setup). Or see https://gist.github.com/willurd/5720255#file-web-servers-md.
+You can alternatively run everything locally using Firebase Emulators (finnicky and doesn't often work for me, but it may for you).
+#+begin_src shell
+  firebase emulators:start
+#+end_src
+
 
 ** Goals
 

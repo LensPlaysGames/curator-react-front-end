@@ -47,8 +47,9 @@ Posts (Table):
 `-- URI, String
 #+end_example
 
-** TODO Visitors will be able to see all Posts from a single Channel.
+** DONE Visitors will be able to see all Posts from a single Channel.
 Started [2024-06-11 Tue 10:33]
+DONE [2024-06-13 Thu 13:02]
 
 AFAIK this is just going to display a list of Posts from a database.
 
