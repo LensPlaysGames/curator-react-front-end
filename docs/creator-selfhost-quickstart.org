@@ -6,7 +6,9 @@ Let's start off by saying Curator isn't just a website, it's the entire infrastr
 
 Curator is designed as a decentralized video sharing platform, more or less. I won't go into the whole spiel, but this means someone who wants their videos available has the *responsibility* of /making/ them available. If you are here, that someone is /you/, and you are in the right place.
 
-Lets start with some basic requirements to *host your own videos*.
+Keep in mind that if you do this very small amount of hard work, you can make it easy for your friends (or maybe even /customers/) to upload /their/ content to /your/ server, so they can make posts on Curator as well.
+
+Lets start with some basic requirements to host your own videos.
 
 ** Requirements
 
