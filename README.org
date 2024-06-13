@@ -71,9 +71,7 @@ I think I'm going to experiment with slug routing or whatever it's called when I
 **** TODO Users will be able to discover content through Posts from Channels they Track.
 Started [2024-06-11 Tue 10:33]
 
-AFAIK this is going to require user authentication (Firebase?)
-
-AFAIK this is just going to be an array of user identifiers within each user's data in the database that correspond to channels they have clicked the ~Track~ button for.
+AFAIK this is just going to be an array of user identifiers within each user's data in the database that correspond to channels they have clicked the ~Track~ button for. With these user ids, we may then fetch the, let's say three, most-recent posts and add them to an array of posts to be displayed in the /Tracked/ section. We then sort the array by date in descending order and /voila/ we've got exactly what we need to display to the Tracker.
 
 ** Developers
 
