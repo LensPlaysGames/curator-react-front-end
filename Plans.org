@@ -1,0 +1,10 @@
+* For 2024.06.13 (but after I sleep)
+[2024-06-13 Thu 03:54]
+
+So, basically, I just need to make the channel page, where anyone can see all the posts by a given user. Eventually this is where the track button will go, and then it'll go on the see page, etc.
+
+After that, anybody can sign in, make posts, and send people links to either specific posts, or their channel in general so the recipient can decide what interests them and also discover new things.
+
+It would probably be a good idea to have like a "recent posts" on the front page where it doesn't matter who it is, if it just happened, it goes there.
+
+I think =/tracked= will be it's own page, that way we don't force people to fetch all that database stuff if all they want is to manage their own stuff. When an authenticated user goes there, they will see all the posts from their tracked channels sorted by date in descending order (most recent first). *Nothing complicated---if a channel posts it, a user sees it.*
