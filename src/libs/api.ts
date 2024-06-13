@@ -15,7 +15,7 @@ export function postsByEndpoint(userId: string) {
   return `${HOSTNAME}/api/postsBy/${userId}/`;
 };
 
-export function prepareFetchedPosts(data: JSON, userId: string) {
+export function prepareFetchedPosts(data: { posts: Array<any> }, userId: string) {
   const posts = data.posts.map((post: any): Post => ({
     ...post,
     date: new Date(post.date),
