@@ -52,6 +52,10 @@ function AccountSettings({ user }: { user: any }) {
           </button>
         </div>
       </div>
+
+      <a className="flex justify-center w-full" target="_blank" href={`${HOSTNAME}/u/${user.uid}`}>
+        <button className="m-2 py-1 px-3">Your Channel &#x2B5C;</button>
+      </a>
     </div>
   );
 };
