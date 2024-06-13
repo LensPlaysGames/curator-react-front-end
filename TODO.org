@@ -1,0 +1,62 @@
+* Stage One
+
+** DONE Visitors will be able to see content (watch videos) hosted by external servers.
+Started [2024-06-11 Tue 10:33]
+Finished [2024-06-11 Tue 13:18]
+
+AFAIK this is basically just going to be an HTML5 ~<video>~ tag with a customizable ~src~ URI.
+
+** DONE Visitors should be able to sign up and become an authenticated User
+Started [2024-06-11 Tue 13:29]
+Finished [2024-06-12 Wed 14:07]
+
+AFAIK this will require an authentication service and the one I have the most experience with is part of Firebase. Once we can have Users, that will bring us to the next goal, creating Posts.
+
+** DONE Users should be able to create Posts
+Started [2024-06-11 Tue 13:31]
+Finished [2024-06-12 Wed 18:40]
+
+This is where we get into the weeds a bit. I would /sometimes/ prefer that a single User only host content from a single source (i.e. domain). This would mean that everything on the channel is known to come from somewhere specific. But I would also understand if some people wanted to use it as like a literal curation board to save videos they like. So, I think that eventually this will form either two different types of User, two different types of Post, or something to that effect. For now, we will focus on the main use case I see, which is creators hosting their own content, or groups of creators hosting content.
+
+Anyway, AFAIK this will require a little bit of database interaction, but that is about it. The main system I'd like to get in place is just making posts; I can always figure out the per-User URI source or whatever in the future. Like, a post would eventually just have =/videos/blahaj.mp4= as the URI and the site itself would prefix it with the User's source domain, and this sort of Post would be marked as officially sourced or something like that (like maybe on sign-up it can be selected as a verified type of account or something).
+
+In non-relational collection/document db: =/Users/<USER_ID>/Posts/<POST_ID>=
+#+begin_example
+Post:
+|-- postId, Number
+|-- title, String
+|-- info, String
+|-- date, Date
+|-- thumbnailURI, String
+`-- URI, String
+#+end_example
+
+In relational db:
+#+begin_example
+Users (Table):
+|-- userId, Number (Primary Key)
+`-- userName, String
+
+Posts (Table):
+|-- postId, Number (Primary Key)
+|-- userId, Number (Foreign Key)
+|-- title, String
+|-- info, String
+|-- date, Date
+|-- thumbnailURI, String
+`-- URI, String
+#+end_example
+
+** TODO Visitors will be able to see all Posts from a single Channel.
+Started [2024-06-11 Tue 10:33]
+
+AFAIK this is just going to display a list of Posts from a database.
+
+I think I'm going to experiment with slug routing or whatever it's called when I use the brackets in filenames in =Next.js=. So like ~/u/[channelId]~ or something like that.
+
+If this works well and goes smoothly, it may be worth it to make the see page work like that.
+
+** TODO Users will be able to discover content through Posts from Channels they Track.
+Started [2024-06-11 Tue 10:33]
+
+AFAIK this is just going to be an array of user identifiers within each user's data in the database that correspond to channels they have clicked the ~Track~ button for. With these user ids, we may then fetch the, let's say three, most-recent posts and add them to an array of posts to be displayed in the /Tracked/ section. We then sort the array by date in descending order and /voila/ we've got exactly what we need to display to the Tracker.
