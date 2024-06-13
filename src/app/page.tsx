@@ -56,7 +56,7 @@ function AccountSettings({ user }: { user: any }) {
   );
 };
 
-function CreatePostForm({ user, setPostsCallback }: { user: any, setPostsCallback: Function }) {
+function CreatePostForm({ user, setPosts }: { user: any, setPosts: any }) {
   const [inputPostTitle, setInputPostTitle] = useState<string>("");
   const [inputPostInfo, setInputPostInfo] = useState<string>("");
   const [inputPostContentURI, setInputPostContentURI] = useState<string>("");
@@ -77,7 +77,7 @@ function CreatePostForm({ user, setPostsCallback }: { user: any, setPostsCallbac
       type: "video",
     };
 
-    setPostsCallback(oldPosts => {
+    setPosts((oldPosts: any) => {
       // We do this weird syntax to avoid having to sort.
       const newPosts = [{ id: postId, ...post }].concat(oldPosts);
       return newPosts;
@@ -102,7 +102,7 @@ function CreatePostForm({ user, setPostsCallback }: { user: any, setPostsCallbac
   }
 
   return (
-    <div className="flex flex-col gap-y-1 mt-4">
+    <div className="flex flex-col gap-y-1 py-3 px-5 mt-4 border border-zinc-700 bg-zinc-900 rounded">
       <h1>Create New Post</h1>
 
       <div>
@@ -146,7 +146,7 @@ function CreatePostForm({ user, setPostsCallback }: { user: any, setPostsCallbac
       </div>
 
       <button
-        className="mt-1"
+        className="my-2"
         onClick={
           () => postPost(
             user.uid,
@@ -220,7 +220,7 @@ export default function Home() {
           <div>
             <AccountSettings user={user} />
 
-            <CreatePostForm user={user} setPostsCallback={setPosts} />
+            <CreatePostForm user={user} setPosts={setPosts} />
 
             <div>
               <h1>Your Posts</h1>
@@ -229,7 +229,7 @@ export default function Home() {
                 {
                   posts.map(post => (
                     <div
-                      className="flex justify-between items-center p-2 border border-slate-700 rounded"
+                      className="flex justify-between items-center p-2 border border-zinc-700 rounded"
                       key={post.id}
                     >
                       <div className="flex justify-between gap-x-6 w-full overflow-hidden">
@@ -254,7 +254,7 @@ export default function Home() {
               </div>
             </div>
 
-            <button className="text-red-600 my-4 w-full" onClick={signOut}>Sign Out</button>
+            <button className="bg-zinc-700 hover:bg-zinc-900 text-red-600 hover:text-red-600 my-4 w-full" onClick={signOut}>Sign Out</button>
           </div>
         )
         : (<>
