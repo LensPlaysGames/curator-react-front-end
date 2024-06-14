@@ -61,3 +61,52 @@ If this works well and goes smoothly, it may be worth it to make the see page wo
 Started [2024-06-11 Tue 10:33]
 
 AFAIK this is just going to be an array of user identifiers within each user's data in the database that correspond to channels they have clicked the ~Track~ button for. With these user ids, we may then fetch the, let's say three, most-recent posts and add them to an array of posts to be displayed in the /Tracked/ section. We then sort the array by date in descending order and /voila/ we've got exactly what we need to display to the Tracker.
+
+** TODO Users might be able to leave Comments on Posts
+Started [2024-06-13 Thu 18:33]
+
+This will require some stupid data-bundling I think where like 1000 comments go in a single document and there has to be an API for the server to add them in the appropriate spot. Otherwise, if a post has one thousand comments and a user scrolls through them all, that's /one thousand reads from the database/ just for the comments. We will probably also be fetching each commenter's user data for a display name, profile picture, etc. So there's another thousand. And that's one user, one post. They might do ten posts everyday. That would get ... costly. So, bundling one thousand comments in a single document will reduce costs by /gasp/ one thousand times. It's worth it, no matter how annoying.
+
+In order to enforce this bundling and such, there will need to be an API endpoint to create (and probably others to update, delete, etc) comments.
+
+=/api/comment/create=
+This would then read the request Authorization header to make sure it's an authenticated user. After that, it would read the request body for the comment's text, what post the comment is for, etc.
+
+Then, there would be the "fun" part of determining which bucket this comment goes in. Most likely each post will have a comment number associated with it that we may then use and increment, and we'll just keep making new buckets every time that gets to one thousand. Or something of that nature.
+
+#+begin_example
+/Users (collection)
+|-- <USER_ID> (document)
+|   `-- .displayName (string)
+|   `-- /Posts (subcollection)
+|       `-- /<POST_ID> (document)
+|           |-- .title (string)
+|           |-- .title (string)
+|           `-- /Comments (subcollection)
+|               |-- /0 (document)
+|               |   |-- .0 (object)
+|               |   |-- .1 (object)
+|               |   `-- ...
+|               |-- 1000 (document)
+|               |   |-- .1000 (object)
+|               |   |-- .1001 (object)
+|               |   `-- ...
+|               `-- ...
+`-- ...
+#+end_example
+
+To fetch "all" comments for a given post
+#+begin_src js
+  await getDocs(collection(db, "/Users/USER_ID/Posts/POST_ID/Comments"));
+#+end_src
+
+To fetch "all" comments by a given user (requires custom Firestore index, totally fine)
+#+begin_src js
+  const ownCommentsQuery = query(
+      collectionGroup(db, "Comments"),
+      where("commenterUserId", "==", "USER_ID")
+  );
+  await getDocs(ownCommentsQuery);
+#+end_src
+
+
