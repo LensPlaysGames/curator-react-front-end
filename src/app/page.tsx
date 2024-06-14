@@ -233,7 +233,7 @@ export default function Home() {
                         className="flex justify-between bg-black items-center p-2 border border-zinc-700 rounded"
                         key={post.id}
                       >
-                        <div className="flex justify-between gap-x-6 w-full overflow-hidden">
+                        <div className="flex flex-col justify-between gap-x-6 w-full overflow-hidden">
                           <span className="truncate">{post.title}</span>
                           <span className="hidden md:inline">{post.date.toDateString()}</span>
                         </div>
