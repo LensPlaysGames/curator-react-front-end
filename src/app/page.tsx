@@ -14,7 +14,6 @@ import {
   query,
   setDoc
 } from "firebase/firestore";
-import { revalidateTag } from "next/cache"
 import { firebaseDb } from "@/libs/firebase/config";
 import {
   firebaseAuth,
@@ -22,7 +21,7 @@ import {
   signOut,
   UserContext
 } from "@/libs/firebase/auth";
-import { ownPosts } from "@/libs/api";
+import { posts as fetchPosts } from "@/libs/api";
 import { HOSTNAME } from "@/constants";
 
 function AccountSettings({ user }: { user: any }) {
@@ -53,9 +52,7 @@ function AccountSettings({ user }: { user: any }) {
         </div>
       </div>
 
-      <a className="flex justify-center w-full" target="_blank" href={`${HOSTNAME}/u/${user.uid}`}>
-        <button className="m-2 py-1 px-3">Your Channel &#x2B5C;</button>
-      </a>
+      <button className="bg-zinc-700 hover:bg-zinc-900 text-red-600 hover:text-red-600 my-4 w-full" onClick={signOut}>Sign Out</button>
     </div>
   );
 };
@@ -87,9 +84,10 @@ function CreatePostForm({ user, setPosts }: { user: any, setPosts: any }) {
       return newPosts;
     })
 
-    // Re-fetch our own posts from database next time, instead of from the
-    // cache, since we're about to alter them.
-    revalidateTag("ownPosts");
+    setInputPostTitle("");
+    setInputPostInfo("");
+    setInputPostContentURI("");
+    setInputPostThumbnailURI("");
 
     const promises = [];
 
@@ -196,10 +194,6 @@ export default function Home() {
       return newPosts;
     });
 
-    // Re-fetch our own posts from database next time, instead of from the
-    // cache, since we're about to alter them.
-    revalidateTag("ownPosts");
-
     let promises = [];
     promises.push(
       deleteDoc(doc(firebaseDb, "Users", `${user?.uid}`, "Posts", post.id))
@@ -216,7 +210,7 @@ export default function Home() {
     (async () => {
       onAuthStateChanged(firebaseAuth, async (newUser) => {
         if (newUser) {
-          const data = await ownPosts(newUser.uid);
+          const data = await fetchPosts(newUser.uid);
           setPosts(data.posts);
         }
       })
@@ -228,43 +222,47 @@ export default function Home() {
       { user
         ? (
           <>
-            <AccountSettings user={user} />
+            <div className="panel">
+
+              <div>
+                <h1>Your Posts</h1>
+                <div className="flex flex-col mt-2">
+                  {
+                    posts.map(post => (
+                      <div
+                        className="flex justify-between bg-black items-center p-2 border border-zinc-700 rounded"
+                        key={post.id}
+                      >
+                        <div className="flex justify-between gap-x-6 w-full overflow-hidden">
+                          <span className="truncate">{post.title}</span>
+                          <span className="hidden md:inline">{post.date.toDateString()}</span>
+                        </div>
+                        <div className="flex ml-2">
+                          <button
+                            className="py-1 px-3"
+                            onClick={() => deletePost(post)}
+                          >
+                            &#x1F5D1;
+                          </button>
+
+                          <a target="_blank" href={`${HOSTNAME}/see/${post.id}/?u=${user.uid}`}>
+                            <button className="py-1 px-3">&#9658;</button>
+                          </a>
+                        </div>
+                      </div>
+                    ))
+                  }
+                </div>
+              </div>
+
+              <a className="flex justify-center w-full" target="_blank" href={`${HOSTNAME}/u/${user.uid}`}>
+                <button className="m-2 py-1 px-3">Your Channel &#x2B5C;</button>
+              </a>
+            </div>
 
             <CreatePostForm user={user} setPosts={setPosts} />
 
-            <div className="panel">
-              <h1>Your Posts</h1>
-
-              <div className="flex flex-col mt-2">
-                {
-                  posts.map(post => (
-                    <div
-                      className="flex justify-between bg-black items-center p-2 border border-zinc-700 rounded"
-                      key={post.id}
-                    >
-                      <div className="flex justify-between gap-x-6 w-full overflow-hidden">
-                        <span className="truncate">{post.title}</span>
-                        <span className="hidden md:inline">{post.date.toDateString()}</span>
-                      </div>
-                      <div className="flex ml-2">
-                        <button
-                          className="py-1 px-3"
-                          onClick={() => deletePost(post)}
-                        >
-                          &#x1F5D1;
-                        </button>
-
-                        <a target="_blank" href={`${HOSTNAME}/see/${post.id}/?u=${user.uid}`}>
-                          <button className="py-1 px-3">&#9658;</button>
-                        </a>
-                      </div>
-                    </div>
-                  ))
-                }
-              </div>
-            </div>
-
-            <button className="bg-zinc-700 hover:bg-zinc-900 text-red-600 hover:text-red-600 my-4 w-full" onClick={signOut}>Sign Out</button>
+            <AccountSettings user={user} />
           </>
         )
         : (<>

@@ -10,12 +10,15 @@ export interface Post {
   posterUserId: string
 }
 
-/// postsBy/[userId]
-export function postsByEndpoint(userId: string) {
-  return `${HOSTNAME}/api/postsBy/${userId}/`;
-};
+export async function posts(userId: string) {
+  const response = await fetch(`${HOSTNAME}/api/postsBy/${userId}/`, {
+    next: {
+      // time-to-live for this cache entry, in seconds
+      revalidate: 60 * 5
+    }
+  })
 
-export function prepareFetchedPosts(data: { posts: Array<any> }, userId: string) {
+  const data = await response.json();
   const posts = data.posts.map((post: any): Post => ({
     ...post,
     date: new Date(post.date),
@@ -26,36 +29,6 @@ export function prepareFetchedPosts(data: { posts: Array<any> }, userId: string)
   posts.sort((a: any, b: any) => (b.date - a.date));
 
   return { posts };
-}
-
-export async function posts(userId: string) {
-  const response = await fetch(postsByEndpoint(userId), {
-    next: {
-      // time-to-live for this cache entry, in seconds
-      revalidate: 60 * 5,
-      // call revalidateTag() with one of these tags to make the next fetch from
-      // this revalidate the cache (refresh from database).
-      tags: ["posts"]
-    }
-  })
-
-  const data = await response.json();
-  return prepareFetchedPosts(data, userId);
-}
-
-// Different purely for more efficient caching
-export async function ownPosts(userId: string) {
-  const response = await fetch(postsByEndpoint(userId), {
-    next: {
-      // Call revalidateTag("ownPosts")to make the next fetch from this
-      // revalidate the cache (refresh from database). Do this when a user
-      // creates, updates, or deletes a post.
-      tags: ["posts", "ownPosts"]
-    }
-  })
-
-  const data = await response.json();
-  return prepareFetchedPosts(data, userId);
 }
 
 export async function whoPosted(postId: string) {
