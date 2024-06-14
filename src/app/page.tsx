@@ -57,7 +57,7 @@ function AccountSettings({ user }: { user: any }) {
   );
 };
 
-function CreatePostForm({ user, setPosts }: { user: any, setPosts: any }) {
+function CreatePostForm({ user, newPostCallback }: { user: User, newPostCallback: Function }) {
   const [inputPostTitle, setInputPostTitle] = useState<string>("");
   const [inputPostInfo, setInputPostInfo] = useState<string>("");
   const [inputPostContentURI, setInputPostContentURI] = useState<string>("");
@@ -78,11 +78,7 @@ function CreatePostForm({ user, setPosts }: { user: any, setPosts: any }) {
       type: "video",
     };
 
-    setPosts((oldPosts: any) => {
-      // We do this weird syntax to avoid having to sort.
-      const newPosts = [{ id: postId, ...post }].concat(oldPosts);
-      return newPosts;
-    })
+    newPostCallback(post, postId);
 
     setInputPostTitle("");
     setInputPostInfo("");
@@ -181,6 +177,46 @@ function CreatePostForm({ user, setPosts }: { user: any, setPosts: any }) {
   );
 }
 
+function YourPosts({ user, posts }: { user: User, posts: Array<any> }) {
+  return (
+    <div className="panel">
+      <h1>Your Posts</h1>
+      <div className="flex flex-col mt-2">
+        {
+          posts.map(post => (
+            <div
+              className="flex justify-between bg-black items-center p-2 border border-zinc-700 rounded"
+              key={post.id}
+            >
+              <div className="flex flex-col justify-between gap-x-6 w-full overflow-hidden">
+                <span className="truncate">{post.title}</span>
+                <span className="hidden md:inline">{post.date.toDateString()}</span>
+              </div>
+              <div className="flex ml-2">
+                <button
+                  className="py-1 px-3"
+                  onClick={() => deletePost(post)}
+                >
+                  &#x1F5D1;
+                </button>
+
+                <a target="_blank" href={`${HOSTNAME}/see/${post.id}/?u=${user.uid}`}>
+                  <button className="py-1 px-3">&#9658;</button>
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <a className="flex justify-center w-full" target="_blank" href={`${HOSTNAME}/u/${user.uid}`}>
+        <button className="m-2 py-1 px-3">Your Channel &#x2B5C;</button>
+      </a>
+    </div>
+
+  );
+}
+
 export default function Home() {
   const {user, setUser} = useContext(UserContext);
   const [posts, setPosts] = useState<Array<any>>([]);
@@ -222,45 +258,17 @@ export default function Home() {
       { user
         ? (
           <>
-            <div className="panel">
+            <YourPosts user={user} posts={posts} />
 
-              <div>
-                <h1>Your Posts</h1>
-                <div className="flex flex-col mt-2">
-                  {
-                    posts.map(post => (
-                      <div
-                        className="flex justify-between bg-black items-center p-2 border border-zinc-700 rounded"
-                        key={post.id}
-                      >
-                        <div className="flex flex-col justify-between gap-x-6 w-full overflow-hidden">
-                          <span className="truncate">{post.title}</span>
-                          <span className="hidden md:inline">{post.date.toDateString()}</span>
-                        </div>
-                        <div className="flex ml-2">
-                          <button
-                            className="py-1 px-3"
-                            onClick={() => deletePost(post)}
-                          >
-                            &#x1F5D1;
-                          </button>
-
-                          <a target="_blank" href={`${HOSTNAME}/see/${post.id}/?u=${user.uid}`}>
-                            <button className="py-1 px-3">&#9658;</button>
-                          </a>
-                        </div>
-                      </div>
-                    ))
-                  }
-                </div>
-              </div>
-
-              <a className="flex justify-center w-full" target="_blank" href={`${HOSTNAME}/u/${user.uid}`}>
-                <button className="m-2 py-1 px-3">Your Channel &#x2B5C;</button>
-              </a>
-            </div>
-
-            <CreatePostForm user={user} setPosts={setPosts} />
+            <CreatePostForm
+              user={user}
+              newPostCallback={(post, postId) => {
+                setPosts((oldPosts: any) => {
+                  // We do this weird syntax to avoid having to re-sort.
+                  return [{ id: postId, ...post }].concat(oldPosts);
+                })
+              }}
+            />
 
             <AccountSettings user={user} />
           </>
