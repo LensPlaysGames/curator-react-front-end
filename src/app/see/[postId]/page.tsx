@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import { HOSTNAME } from "@/constants"
@@ -76,7 +77,9 @@ function PostDisplay({ postId }: { postId: string }) {
         info={post.info}
         date={post.date}
       />
-      <a href={`${HOSTNAME}/u/${post.posterUserId}`}><button>Channel</button></a>
+      <Link href={`${HOSTNAME}/u/${post.posterUserId}`}>
+        <button>Channel</button>
+      </Link>
     </>
   )
 }
