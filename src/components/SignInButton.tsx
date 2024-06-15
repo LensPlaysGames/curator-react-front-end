@@ -1,9 +1,6 @@
 "use client";
 
 import {
-  firebaseAnalytics
-} from "@/libs/firebase/config"
-import {
   signInPopupGoogle,
   type User
 } from "@/libs/firebase/auth";
