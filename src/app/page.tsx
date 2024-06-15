@@ -36,14 +36,14 @@ export default function Home() {
                 <button className="w-full">Make Posts</button>
               </Link>
             </div>
-            <div className="panel">
-              <h1>Featured Channels</h1>
-              <p>It's a bit quiet right now...</p>
-              <p>Make a few posts, contact the owner, and maybe you could show up here.</p>
-            </div>
           </>
         : <SignInButton callback={setUser}/>
       }
+      <div className="panel">
+        <h1>Featured Channels</h1>
+        <p>It&apos;s a bit quiet right now...</p>
+        <p>Make a few posts, contact the owner, and maybe you could show up here.</p>
+      </div>
     </div>
   );
 }
