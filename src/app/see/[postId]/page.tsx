@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import { HOSTNAME } from "@/constants"
 import { firebaseDb, doc, getDoc } from "@/libs/firebase/db"
-import VideoPlayer from "@/components/videoPlayer";
+import VideoPlayer from "@/components/VideoPlayer";
 import { whoPosted } from "@/libs/api";
 
 async function FetchPost(postId: string | null, posterUserId?: string | null) {

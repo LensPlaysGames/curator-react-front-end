@@ -10,7 +10,7 @@ import { useSearchParams } from "next/navigation";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState, Suspense } from "react";
 import { firebaseDb } from "@/libs/firebase/config"
-import VideoPlayer from "@/components/videoPlayer";
+import VideoPlayer from "@/components/VideoPlayer";
 
 async function FetchPost(postId: string | null, posterUserId?: string | null) {
   if (!postId || postId.length === 0) {
