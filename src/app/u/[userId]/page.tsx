@@ -1,7 +1,8 @@
 "use client";
 
-import { HOSTNAME } from "@/constants";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { HOSTNAME } from "@/constants";
 import { posts as fetchPosts } from "@/libs/api"
 
 export default function UserPage({ params }: { params: { userId: string }}) {
@@ -29,11 +30,11 @@ export default function UserPage({ params }: { params: { userId: string }}) {
               <span className="hidden md:inline">{post.date.toDateString()}</span>
             </div>
             <div className="flex ml-2">
-              {// Link to see page
+              {// Link to See page
               }
-              <a target="_blank" href={`${HOSTNAME}/see?u=${uid}&p=${post.id}`}>
+              <Link target="_blank" href={`${HOSTNAME}/see/${post.id}/?u=${uid}`}>
                 <button className="py-1 px-3">&#9658;</button>
-              </a>
+              </Link>
             </div>
           </div>
         ))
