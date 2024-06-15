@@ -1,14 +1,10 @@
-"use client";
-
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState, Suspense } from "react";
 import { HOSTNAME } from "@/constants"
 import { firebaseDb, doc, getDoc } from "@/libs/firebase/db"
 import VideoPlayer from "@/components/VideoPlayer";
 import { whoPosted } from "@/libs/api";
 
-async function FetchPost(postId: string | null, posterUserId?: string | null) {
+async function FetchPost(postId: string | null, posterUserId?: string | string[] | null) {
   if (!postId || postId.length === 0) {
     return { error: (
       <p>Please provide a post ID (<code>?p=&lt;POST_ID&gt;</code> at end of URL).</p>
@@ -43,32 +39,8 @@ async function FetchPost(postId: string | null, posterUserId?: string | null) {
   return post;
 }
 
-function PostDisplay({ postId }: { postId: string }) {
-  const [post, setPost] = useState<any>(null);
-  const params = useSearchParams();
-
-  // This is a hook that takes a callback (the lambda, first argument)
-  // referred to as an "effect".
-  // The empty array as the second argument causes this to run once when the
-  // component is first rendered then never again. If we were to add
-  // dependencies into the array, then anytime those dependencies changed
-  // the effect would run.
-  useEffect(() => {
-    // Async IIFE
-    (async () => {
-      setPost(await FetchPost(postId, params.get("u")));
-    })();
-  }, []);
-
-  // While we are waiting for the data to be fetched, display a basic
-  // loading screen.
-  if (!post) return (<p>Loading...</p>);
-
-  // If the data was unable to be fetched for some reason, this displays to
-  // the user that something went wrong.
+function PostDisplay({ post }: { post: any }) {
   if (post.error) return post.error;
-
-  // Success! Post acquired, we may now display it.
   return (
     <>
       <VideoPlayer
@@ -84,12 +56,39 @@ function PostDisplay({ postId }: { postId: string }) {
   )
 }
 
-export default function See({ params }: { params: { postId: string }}) {
-  // I wouldn't touch Suspense with a ten foot pole, but, for some ungodly
-  // reason, it is *required* when using `useSearchParams`...
-  return (
-    <Suspense>
-      <PostDisplay postId={params.postId} />
-    </Suspense>
-  );
+export async function generateMetadata({ params, searchParams }: { params: { postId: string }, searchParams: { [key: string]: string | string[] | undefined } }) {
+  const postId = params.postId;
+  const post = await FetchPost(params.postId, searchParams.u);
+  // TODO: if (post.error) "do something"
+  const posterUserId = post.posterUserId;
+
+  const metadata = {
+    title: post.title,
+    description: post.info,
+    keywords: [ post.title ],
+    authors: [{ url: `${HOSTNAME}/u/${posterUserId}` }],
+    openGraph: {
+      title: post.title,
+      description: post.info,
+      url: `${HOSTNAME}/see/${postId}/?u=${posterUserId}`,
+      siteName: "Curator, vsp",
+      images: (post.thumbnailURI && post.thumbnailURI.length !== 0)
+        ? [
+          {
+            url: post.thumbnailURI,
+            alt: `Thumbnail for post titled ${post.title}`,
+          }
+        ]
+        : [],
+      locale: "en_US",
+      type: "website",
+    },
+  };
+
+  return metadata;
+}
+
+export default async function See({ params, searchParams }: { params: { postId: string }, searchParams: { [key: string]: string | string[] | undefined } }) {
+  const post = await FetchPost(params.postId, searchParams.u);
+  return <PostDisplay post={post} />;
 }

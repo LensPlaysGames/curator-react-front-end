@@ -7,7 +7,10 @@ import { HOSTNAME } from "@/constants";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Curator, vsp.",
+  title: {
+    default: "Curator, vsp.",
+    template: "%s | Curator, vsp",
+  },
   description: "Curator, a video sharing platform.",
 };
 
