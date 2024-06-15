@@ -2,7 +2,6 @@
 // exposes all the necessary components, like firebaseAuth.
 
 import { getApps, initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getFunctions } from "firebase/functions";
@@ -19,7 +18,6 @@ const firebaseConfig = {
 
 const firebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
-export const firebaseAnalytics = getAnalytics();
 export const firebaseAuth = getAuth();
 export const firebaseDb = getFirestore();
 export const firebaseFunctions = getFunctions();
