@@ -1,12 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   firebaseAuth,
   onAuthStateChanged,
   type User,
   UserContext,
 } from "@/libs/firebase/auth"
-import { useEffect, useState } from "react";
 
 export default function ClientWrapper({
   children,
