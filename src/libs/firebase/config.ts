@@ -2,8 +2,10 @@
 // exposes all the necessary components, like firebaseAuth.
 
 import { getApps, initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getFunctions } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBKLll6CklsBfv193UsU2ZI2nmp7gi1Nl4",
@@ -15,8 +17,9 @@ const firebaseConfig = {
   measurementId: "G-1Y9SEFVW8V"
 };
 
-// Initialize the Firebase application
 const firebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
+export const firebaseAnalytics = getAnalytics();
 export const firebaseAuth = getAuth();
 export const firebaseDb = getFirestore();
+export const firebaseFunctions = getFunctions();

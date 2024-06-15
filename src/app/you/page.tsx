@@ -13,8 +13,9 @@ import {
   query,
   setDoc
 } from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
 import Link from "next/link";
-import { firebaseDb } from "@/libs/firebase/config";
+import { firebaseDb, firebaseFunctions } from "@/libs/firebase/config";
 import {
   type User,
   firebaseAuth,
@@ -64,46 +65,6 @@ function CreatePostForm({ user, newPostCallback }: { user: User, newPostCallback
   const [inputPostContentURI, setInputPostContentURI] = useState<string>("");
   const [inputPostThumbnailURI, setInputPostThumbnailURI] = useState<string>("");
 
-  async function postPost(posterUserId: string, title: string, info: string, contentURI: string, thumbnailURI: string) {
-    // Generate a universally unique post ID; we don't check for collisions
-    // because the chances of that are less than multiple bit flips happening
-    // randomly and causing an error in the program.
-    const postId = uuidv4();
-
-    const post = {
-      title,
-      info,
-      contentURI,
-      thumbnailURI,
-      date: new Date(),
-      type: "video",
-    };
-
-    newPostCallback(post, postId);
-
-    setInputPostTitle("");
-    setInputPostInfo("");
-    setInputPostContentURI("");
-    setInputPostThumbnailURI("");
-
-    const promises = [];
-
-    promises.push(
-      setDoc(
-        doc(firebaseDb, "Users", posterUserId, "Posts", postId),
-        post,
-        { merge: true }
-      )
-    );
-    promises.push(
-      setDoc(doc(firebaseDb, "WhoPosts", postId), {
-        uid: posterUserId,
-      })
-    );
-
-    return Promise.all(promises);
-  }
-
   return (
     <div className="panel">
       <h1>Create New Post</h1>
@@ -148,28 +109,46 @@ function CreatePostForm({ user, newPostCallback }: { user: User, newPostCallback
         />
       </div>
 
-      {/*
-        <div className="flex justify-between">
-          <label className="text-nowrap" htmlFor="post_type">Type</label>
-          <select id="post_type">
-            <option value="V" selected>Video</option>
-            <option value="A">Audio</option>
-            <option value="T">Text</option>
-            <option value="S">Something Else</option>
-          </select>
-        </div>
-        */}
+      {
+        //<div className="flex justify-between">
+        //  <label className="text-nowrap" htmlFor="post_type">Type</label>
+        //  <select id="post_type">
+        //    <option value="V" selected>Video</option>
+        //    <option value="A">Audio</option>
+        //    <option value="T">Text</option>
+        //    <option value="S">Something Else</option>
+        //  </select>
+        //</div>
+      }
 
       <button
         className="my-2"
         onClick={
-          () => postPost(
-            user.uid,
-            inputPostTitle,
-            inputPostInfo,
-            inputPostContentURI,
-            inputPostThumbnailURI
-          )
+          async () => {
+            httpsCallable(firebaseFunctions, "postPost")({
+              title: inputPostTitle,
+              info: inputPostInfo,
+              type: "Video",
+              contentURI: inputPostContentURI,
+              thumbnailURI: inputPostThumbnailURI,
+            })
+              .then((post: any) => {
+                post.data.date = new Date(post.data.date);
+
+                newPostCallback(post.data);
+
+                setInputPostTitle("");
+                setInputPostInfo("");
+                setInputPostContentURI("");
+                setInputPostThumbnailURI("");
+              })
+              .catch((error: any) => {
+                const msg = `Error ${error.code}: ${error.message}`;
+                alert(msg);
+                console.error(msg);
+                console.error(error.details);
+              })
+          }
         }
       >
         Post
@@ -273,8 +252,8 @@ export default function You() {
               newPostCallback={(post: any, postId: any) => {
                 setPosts((oldPosts: any) => {
                   // We do this weird syntax to avoid having to re-sort.
-                  return [{ id: postId, ...post }].concat(oldPosts);
-                })
+                  return [post].concat(oldPosts);
+                });
               }}
             />
 
