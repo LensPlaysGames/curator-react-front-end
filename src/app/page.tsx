@@ -1,6 +1,5 @@
 "use client";
 
-import { SignInButton } from "./signInButton";
 import { useContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -14,6 +13,7 @@ import {
   query,
   setDoc
 } from "firebase/firestore";
+import { SignInButton } from "@/components/SignInButton";
 import { firebaseDb } from "@/libs/firebase/config";
 import {
   firebaseAuth,
