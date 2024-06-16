@@ -13,7 +13,7 @@ export async function GET(request: Request, { params }: { params: { userId: stri
     rss,
     {
       headers: {
-        "Content-Type": "type/xml",
+        "Content-Type": "text/xml",
       }
     });
 }
