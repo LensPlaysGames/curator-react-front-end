@@ -6,6 +6,7 @@ import {
 } from "@/libs/firebase/config"
 import {
   collection,
+  doc,
   getDocs,
   query,
   orderBy,
@@ -31,4 +32,16 @@ export async function fetchPostsByUser(posterUserId: string, givenLimit: number 
   posts.sort((a, b) => (b.date - a.date));
 
   return posts;
+}
+
+// TODO: Make an API endpoint and then a function in "@/libs/api" that
+// caches for 48 hours or something to majorly save on reading data that
+// for the most part will never change.
+export async function fetchUserData(uid: string) {
+  const userDataRef = doc(firebaseDb, "Users", uid);
+  const userDataSnap = await getDoc(userDataRef);
+  if (!userDataSnap.exists()) {
+    return { error: "404" };
+  }
+  return userDataSnap.data();
 }
