@@ -44,6 +44,11 @@ export default function UserPage({ params }: { params: { userId: string }}) {
           </Link>
         ))
       }
+      <Link target="_blank" href={`/api/rss/postsBy/${uid}`}>
+        <button>
+          RSS
+        </button>
+      </Link>
     </div>
   );
 }
