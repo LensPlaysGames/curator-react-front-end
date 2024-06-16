@@ -109,4 +109,6 @@ To fetch "all" comments by a given user (requires custom Firestore index, totall
   await getDocs(ownCommentsQuery);
 #+end_src
 
+** TODO I should really make a quiver of =Post= types
+Started [2024-06-15 Sat 21:06]
 

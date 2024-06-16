@@ -4,6 +4,8 @@ import { firebaseDb, doc, getDoc } from "@/libs/firebase/db"
 import VideoPlayer from "@/components/VideoPlayer";
 import { whoPosted } from "@/libs/api";
 
+// TODO: Make us of `fetch` (somehow) in order to better take advantage of
+// caching.
 async function FetchPost(postId: string | null, posterUserId?: string | string[] | null) {
   if (!postId || postId.length === 0) {
     return { error: (
