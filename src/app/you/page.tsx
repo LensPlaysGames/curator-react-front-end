@@ -24,7 +24,6 @@ import {
   UserContext
 } from "@/libs/firebase/auth";
 import { posts as fetchPosts } from "@/libs/api";
-import { HOSTNAME } from "@/constants";
 
 function AccountSettings({ user }: { user: any }) {
   const [inputDisplayName, setInputDisplayName] = useState<string>("");
@@ -178,30 +177,41 @@ function YourPosts({ user, posts, deletePostCallback }: { user: User, posts: Arr
   return (
     <div className="panel">
       <h1>Your Posts</h1>
-      <div className="flex flex-col mt-2">
+      <div className="flex flex-col mt-2 gap-y-2">
         {
           posts.map(post => (
-            <div
-              className="flex justify-between bg-black items-center p-2 border border-zinc-700 rounded"
-              key={post.id}
+            <Link
+              className="w-full"
+              target="_blank"
+              title={post.title}
+              href={`/see/${post.id}/?u=${user.uid}`}
             >
-              <div className="flex flex-col justify-between gap-x-6 w-full overflow-hidden">
-                <span className="truncate">{post.title}</span>
-                <span className="hidden md:inline">{post.date.toDateString()}</span>
-              </div>
-              <div className="flex ml-2">
-                <button
-                  className="py-1 px-3"
-                  onClick={() => deletePost(post)}
+              <div className="flex flex-col p-2">
+                { post.thumbnailURI && post.thumbnailURI.startsWith("https://")
+                  ? <div className="pt-4 pb-1">
+                      <img className="mx-auto" src={post.thumbnailURI} />
+                    </div>
+                  : null
+                }
+                <div
+                  className="flex justify-between items-center"
+                  key={post.id}
                 >
-                  &#x1F5D1;
-                </button>
-
-                <Link target="_blank" href={`${HOSTNAME}/see/${post.id}/?u=${user.uid}`}>
-                  <button className="py-1 px-3">&#9658;</button>
-                </Link>
+                  <div className="flex flex-col justify-between gap-x-6 w-full overflow-hidden text-nowrap">
+                    <span className="truncate">{post.title}</span>
+                    <span className="hidden md:inline">{post.date.toDateString()}</span>
+                  </div>
+                  <div className="flex ml-2">
+                    <button
+                      className="py-1 px-3"
+                      onClick={() => deletePost(post)}
+                    >
+                      &#x1F5D1;
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
+            </Link>
           ))
         }
       </div>
@@ -209,7 +219,7 @@ function YourPosts({ user, posts, deletePostCallback }: { user: User, posts: Arr
       <Link
         className="flex justify-center w-full"
         target="_blank"
-        href={`${HOSTNAME}/u/${user.uid}`}
+        href={`/u/${user.uid}`}
       >
         <button className="m-2 py-1 px-3">Your Channel &#x2B5C;</button>
       </Link>

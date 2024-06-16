@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { HOSTNAME } from "@/constants";
 import { posts as fetchPosts } from "@/libs/api"
 
 export default function UserPage({ params }: { params: { userId: string }}) {
@@ -18,25 +17,31 @@ export default function UserPage({ params }: { params: { userId: string }}) {
   }, []);
 
   return (
-    <div className="flex flex-col items-center w-full max-w-screen-sm">
+    <div className="flex flex-col items-center gap-y-2 w-full max-w-screen-sm md:max-w-screen-md">
       {
         posts.map(post => (
-          <div
-            className="flex justify-between bg-black items-center p-2 border border-zinc-700 rounded w-full"
+          <Link
+            className="w-full"
+            title={post.title}
+            target="_blank"
+            href={`/see/${post.id}/?u=${post.posterUserId}`}
             key={post.id}
           >
-            <div className="flex justify-between gap-x-6 w-full overflow-hidden">
-              <span className="truncate">{post.title}</span>
-              <span className="hidden md:inline">{post.date.toDateString()}</span>
-            </div>
-            <div className="flex ml-2">
-              {// Link to See page
+            <div className="flex flex-col bg-black p-2 rounded">
+              { post.thumbnailURI && post.thumbnailURI.startsWith("https://")
+                ? <div className="pt-4 pb-1">
+                    <img className="mx-auto" src={post.thumbnailURI} />
+                  </div>
+                : null
               }
-              <Link target="_blank" href={`${HOSTNAME}/see/${post.id}/?u=${uid}`}>
-                <button className="py-1 px-3">&#9658;</button>
-              </Link>
+              <div className="flex justify-between items-center">
+                <div className="flex flex-col md:flex-row justify-between gap-x-6 w-full text-nowrap">
+                  <span className="truncate">{post.title}</span>
+                  <span>{post.date.toDateString()}</span>
+                </div>
+              </div>
             </div>
-          </div>
+          </Link>
         ))
       }
     </div>
