@@ -185,11 +185,16 @@ function YourPosts({ user, posts, deletePostCallback }: { user: User, posts: Arr
               target="_blank"
               title={post.title}
               href={`/see/${post.id}/?u=${user.uid}`}
+              key={post.id}
             >
               <div className="flex flex-col p-2">
                 { post.thumbnailURI && post.thumbnailURI.startsWith("https://")
                   ? <div className="pt-4 pb-1">
-                      <img className="mx-auto" src={post.thumbnailURI} />
+                      <img
+                        className="mx-auto"
+                        src={post.thumbnailURI}
+                        alt={`Thumbnail for post titled ${post.title}`}
+                      />
                     </div>
                   : null
                 }

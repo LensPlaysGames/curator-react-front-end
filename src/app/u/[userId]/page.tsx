@@ -30,7 +30,11 @@ export default function UserPage({ params }: { params: { userId: string }}) {
             <div className="flex flex-col bg-black p-2 rounded">
               { post.thumbnailURI && post.thumbnailURI.startsWith("https://")
                 ? <div className="pt-4 pb-1">
-                    <img className="mx-auto" src={post.thumbnailURI} />
+                    <img
+                      className="mx-auto"
+                      src={post.thumbnailURI}
+                      alt={`Thumbnail for post titled ${post.title}`}
+                    />
                   </div>
                 : null
               }
