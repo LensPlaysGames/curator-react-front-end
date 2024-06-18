@@ -32,7 +32,7 @@ export default function UserPage({ params }: { params: { userId: string }}) {
               onClick={e => {
                 if (!udata || !udata.tracked) {
                   console.error("No user data, cannot track/untrack a user");
-                  alarm("You must be logged in to track a user");
+                  alert("You must be logged in to track a user");
                 }
                 const shouldRemove = udata.tracked.includes(uid);
                 trackUser(user.uid, uid, shouldRemove);
