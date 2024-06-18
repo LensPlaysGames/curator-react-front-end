@@ -19,7 +19,7 @@ export async function GET(request: Request, { params }: { params: { userId: stri
     });
 }
 
-async function generateRssFeed(posts: Array<any>, userData, userId: string) {
+async function generateRssFeed(posts: Array<any>, userData: { displayName: string }, userId: string) {
   const config = {
     title: `${userData.displayName.length === 0 ? "Unnamed User" : userData.displayName} | Curator, vsp.`,
     description: `${userData.displayName}'s channel on Curator, a Video Sharing Platform.`,
