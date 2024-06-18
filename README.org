@@ -14,6 +14,8 @@ The front-end website for Curator. Basically, the ~<video>~ tag inbetween user a
 
 ** Developers
 
+For the API to work on the local dev server, you will need to either use firebase emulators or get the admin SDK service account key and put it in =src/serviceAccount.json=.
+
 To start the development server on =localhost:3000=
 #+begin_src shell
   npm run dev

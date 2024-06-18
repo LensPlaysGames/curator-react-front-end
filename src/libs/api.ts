@@ -44,3 +44,29 @@ export async function whoPosted(postId: string) {
   const data = await response.json();
   return { uid: data.uid };
 }
+
+// revalidate is in seconds
+// NOTE/FIXME: We may want to somehow use `res.revalidate()` instead of a
+// time-based revalidation.
+async function udata(userId: string, revalidate: number) {
+  const response = await fetch(
+    `${HOSTNAME}/api/udata/${userId}/`,
+    { next: { revalidate } }
+  );
+  if (!response.ok) {
+    console.error(`Could not get udata for user with ID ${userId}`);
+    return {
+      error: `API Error: Could not get user data for user with ID of ${userId}. If you clicked on a link from the official Curator website, please try again later after notifying an admin. Otherwise, the User ID is likely to be incorrect.`
+    };
+  }
+  const data = response.json();
+  return data;
+}
+
+export async function userData(userId: string) {
+  return udata(userId, 60 * 60 * 72);
+}
+
+export async function ownUserData(userId: string) {
+  return udata(userId, 15);
+}
