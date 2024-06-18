@@ -1,10 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
-import { posts as fetchPosts } from "@/libs/api"
+import { posts as fetchPosts, ownUserData } from "@/libs/api"
+
+import { UserContext } from "@/context/auth";
+import { UserDataContext } from "@/context/userData";
+import { trackUser } from "@/libs/firebase/ease";
 
 export default function UserPage({ params }: { params: { userId: string }}) {
+  const {user, setUser} = useContext(UserContext);
+  const {userData: udata, setUserData} = useContext(UserDataContext);
+
   const [posts, setPosts] = useState<Array<any>>([]);
   const uid = params.userId;
 
@@ -18,6 +25,30 @@ export default function UserPage({ params }: { params: { userId: string }}) {
 
   return (
     <div className="flex flex-col items-center gap-y-2 w-full max-w-screen-sm md:max-w-screen-md">
+
+      { user
+        ? <>
+            <button
+              onClick={e => {
+                if (!udata || !udata.tracked) {
+                  console.error("No user data, cannot track/untrack a user");
+                  alarm("You must be logged in to track a user");
+                }
+                const shouldRemove = udata.tracked.includes(uid);
+                trackUser(user.uid, uid, shouldRemove);
+                setUserData({
+                  ...udata,
+                  tracked: shouldRemove
+                    ? udata.tracked.filter(elem => elem !== uid)
+                    : udata.tracked.concat(uid),
+                });
+              }}
+            >
+              { udata && udata.tracked && udata.tracked.includes(uid) ? "Untrack" : "Track" }
+            </button>
+          </>
+        : null
+      }
       {
         posts.map(post => (
           <Link

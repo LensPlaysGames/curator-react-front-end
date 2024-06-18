@@ -39,7 +39,7 @@ export default function ClientWrapper({
 
   return (
     <UserContext.Provider value={{user, setUser}}>
-      <UserDataContext.Provider value={userData}>
+      <UserDataContext.Provider value={{userData, setUserData}}>
         {children}
       </UserDataContext.Provider>
     </UserContext.Provider>

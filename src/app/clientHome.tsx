@@ -9,7 +9,7 @@ import { trackedPosts as fetchTrackedPosts } from "@/libs/api";
 
 export default function ClientHome() {
   const {user, setUser} = useContext(UserContext);
-  const udata = useContext(UserDataContext);
+  const {userData: udata} = useContext(UserDataContext);
 
   const [trackedPosts, setTrackedPosts] = useState<Array<any>>([]);
 

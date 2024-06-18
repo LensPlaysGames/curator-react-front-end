@@ -3,8 +3,11 @@
 import { createContext } from "react";
 
 export type UserDataContent = {
-  displayName: string,
-  tracked: Array<string>,
+  userData: {
+    displayName: string,
+    tracked: Array<string>,
+  },
+  setUserData: Function,
 };
 
 export const UserDataContext = createContext<UserDataContent>({

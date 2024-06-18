@@ -12,11 +12,14 @@ import {
 // Re-exports
 export { firebaseDb } from "./config";
 export {
+  arrayRemove,
+  arrayUnion,
   collection,
   doc,
   getDoc,
   getDocs,
   orderBy,
   limit,
-  query
+  query,
+  setDoc
 } from "firebase/firestore";
