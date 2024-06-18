@@ -31,6 +31,30 @@ export async function posts(userId: string) {
   return { posts };
 }
 
+export async function trackedPosts(userIds: Array<string>) {
+  const posts: Array<any> = [];
+  for (const uid of userIds) {
+    // NOTE: adding revalidate option causes nothing to be returned, for some reason.
+    const response = await fetch(`${HOSTNAME}/api/postsBy/${uid}/`, {
+      next: {
+        // in seconds
+        revalidate: 15,
+      }
+    })
+    const data = await response.json();
+    data.posts.forEach((post: any) => {
+      posts.push({
+        ...post,
+        date: new Date(post.date),
+        posterUserId: uid,
+      });
+    });
+  }
+  // Sort by date, most recent first (descending)
+  posts.sort((a: any, b: any) => (b.date - a.date));
+  return posts;
+}
+
 export async function whoPosted(postId: string) {
   // NOTE: Next.js upgraded fetch with Data Cache means this will be cached
   // indefinitely, or at least as long as possible, afaik.

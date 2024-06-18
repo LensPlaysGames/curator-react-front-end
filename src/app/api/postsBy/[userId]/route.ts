@@ -7,7 +7,7 @@ export async function GET(request: Request, { params }: { params: { userId: stri
   const postsQuery = postsRef.orderBy("date", "desc");
 
   const postsData = await postsQuery.get();
-  const posts = [];
+  const posts: Array<any> = [];
   postsData.forEach(doc => posts.push({
     id: doc.id,
     posterUserId,

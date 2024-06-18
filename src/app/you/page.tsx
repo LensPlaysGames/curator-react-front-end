@@ -198,10 +198,7 @@ function YourPosts({ user, posts, deletePostCallback }: { user: User, posts: Arr
                     </div>
                   : null
                 }
-                <div
-                  className="flex justify-between items-center"
-                  key={post.id}
-                >
+                <div className="flex justify-between items-center">
                   <div className="flex flex-col justify-between gap-x-6 w-full overflow-hidden text-nowrap">
                     <span className="truncate">{post.title}</span>
                     <span className="hidden md:inline">{post.date.toDateString()}</span>
