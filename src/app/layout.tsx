@@ -33,7 +33,6 @@ export default function RootLayout({
                 </a>
               </div>
               <div id="navbar-right">
-                <h1>Welcome</h1>
               </div>
             </div>
 
