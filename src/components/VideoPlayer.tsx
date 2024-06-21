@@ -4,6 +4,7 @@ export default function VideoPlayer({ url, title, info, date }: { url: string, t
   return (
     <div>
       <video
+        className="mx-auto"
         preload="metadata"
         controls
         src={url}

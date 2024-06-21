@@ -1,12 +1,18 @@
-import { db } from "@/libs/firebase/admin";
+import {
+  collection,
+  firebaseDb,
+  getDocs,
+  orderBy,
+  query
+} from "@/libs/firebase/db";
 
 export async function GET(request: Request, { params }: { params: { userId: string }}) {
   const posterUserId = params.userId;
 
-  const postsRef = db.collection("Users").doc(`${posterUserId}`).collection("Posts");
-  const postsQuery = postsRef.orderBy("date", "desc");
+  const postsRef = collection(firebaseDb, "Users", posterUserId, "Posts");
+  const postsQuery = query(postsRef, orderBy("date", "desc"));
 
-  const postsData = await postsQuery.get();
+  const postsData = await getDocs(postsQuery);
   const posts: Array<any> = [];
   postsData.forEach(doc => posts.push({
     id: doc.id,
@@ -15,7 +21,7 @@ export async function GET(request: Request, { params }: { params: { userId: stri
     date: doc.data().date.toDate() // convert Firebase Timestamp to JavaScript Date
   }))
 
-  // Confidence check: sort by date, most recent first (descending)
+  // Sort by date, most recent first (descending)
   posts.sort((a, b) => (b.date - a.date));
 
   return Response.json({ posts });

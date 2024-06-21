@@ -33,34 +33,39 @@ export default function ClientHome() {
           </div>
           <div className="panel">
             <h1>From Users You&apos;ve Tracked</h1>
-            { trackedPosts.map(
-              post => (
-                <Link
-                  className="w-full"
-                  target="_blank"
-                  title={post.title}
-                  href={`/see/${post.id}/?u=${post.posterUserId}`}
-                  key={post.id}
-                >
-                  <div className="flex flex-col p-2">
-                    { post.thumbnailURI && post.thumbnailURI.startsWith("https://")
-                      ? <div className="pt-4 pb-1">
-                          <img
-                            className="mx-auto"
-                            src={post.thumbnailURI}
-                            alt={`Thumbnail for post titled ${post.title}`}
-                          />
-                        </div>
-                      : null
-                    }
-                    <div className="flex flex-col justify-between gap-x-6 w-full overflow-hidden text-nowrap">
-                      <span className="truncate">{post.title}</span>
-                      <span className="hidden md:inline">{post.date.toDateString()}</span>
+            { trackedPosts.length !== 0
+              ? trackedPosts.map(
+                post => (
+                  <Link
+                    className="w-full"
+                    target="_blank"
+                    title={post.title}
+                    href={`/see/${post.id}/?u=${post.posterUserId}`}
+                    key={post.id}
+                  >
+                    <div className="flex flex-col p-2">
+                      { post.thumbnailURI && post.thumbnailURI.startsWith("https://")
+                        ? <div className="pt-4 pb-1">
+                            <img
+                              className="mx-auto"
+                              src={post.thumbnailURI}
+                              alt={`Thumbnail for post titled ${post.title}`}
+                            />
+                          </div>
+                        : null
+                      }
+                      <div className="flex flex-col justify-between gap-x-6 w-full overflow-hidden text-nowrap">
+                        <span className="truncate">{post.title}</span>
+                        <span className="hidden md:inline">{post.date.toDateString()}</span>
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                )
               )
-            )}
+              : <p className="font-bold">
+                  Go to a channel and click "Track" to see their posts show up here.
+                </p>
+            }
           </div>
         </>
       : <SignInButton callback={setUser}/>
