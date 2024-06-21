@@ -63,7 +63,7 @@ export default function ClientHome() {
                 )
               )
               : <p className="font-bold">
-                  Go to a channel and click "Track" to see their posts show up here.
+                  Go to a channel and click &quot;Track&quot; to see their posts show up here.
                 </p>
             }
           </div>
